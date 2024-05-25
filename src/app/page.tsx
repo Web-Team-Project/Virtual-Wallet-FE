@@ -3,12 +3,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { SparklesCore } from "./components/ui/sparkles";
 
 const World = dynamic(() => import("../app/components/ui/globe").then((m) => m.World), {
   ssr: false,
 });
 
-export default function GlobeDemo() {
+export default function GlobalPaymentSystem() {
   const globeConfig = {
     pointSize: 4,
     globeColor: "#062056",
@@ -396,8 +397,19 @@ export default function GlobeDemo() {
   ];
 
   return (
-    <div className="flex flex-row items-center justify-center py-20 h-screen md:h-auto dark:bg-black bg-white relative w-full">
-      <div className="max-w-7xl mx-auto w-full relative overflow-hidden h-full md:h-[40rem] px-4">
+    <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+      <div className="w-full absolute inset-0 h-screen">
+        <SparklesCore
+          id="tsparticlesfullpage"
+          background="transparent"
+          minSize={0.6}
+          maxSize={1.4}
+          particleDensity={100}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
+        />
+      </div>
+      <div className="relative w-full max-w-7xl mx-auto h-full md:h-[40rem] px-4">
         <motion.div
           initial={{
             opacity: 0,
@@ -410,36 +422,36 @@ export default function GlobeDemo() {
           transition={{
             duration: 1,
           }}
-          className="div"
+          className="text-center relative z-20"
         >
-          <h2 className="text-center text-xl md:text-4xl font-bold text-black dark:text-white">
-            Our Global Payment System
+          <h2 className="text-xl md:text-4xl font-bold text-white">
+            Global Payment System
           </h2>
-          <div className="text-center mt-4">
-            <Link href="/signup" passHref>
-              <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
-                Sign Up with Email
-              </button>
-            </Link>
-            <Link href="/signin" passHref>
-              <button className="ml-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
-                Sign In
-              </button>
-            </Link>
-            <Link href="/google-login" passHref>
-              <button className="ml-2 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600">
-                Login with Google
-              </button>
-            </Link>
-          </div>
-          <p className="text-center text-base md:text-lg font-normal text-neutral-700 dark:text-neutral-200 max-w-md mt-2 mx-auto">
+          <p className="text-base md:text-lg font-normal text-neutral-200 max-w-md mt-2 mx-auto">
             Experience seamless transactions with our interactive and customizable global payment system. Join us and make your transactions smoother and more secure.
           </p>
         </motion.div>
-        <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40" />
+        <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent to-black z-10" />
         <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
           <World data={sampleArcs} globeConfig={globeConfig} />;
         </div>
+      </div>
+      <div className="text-center mt-4 z-20">
+        <Link href="/signup" passHref>
+          <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
+            Sign Up with Email
+          </button>
+        </Link>
+        <Link href="/signin" passHref>
+          <button className="ml-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+            Sign In
+          </button>
+        </Link>
+        <Link href="/google-login" passHref>
+          <button className="ml-2 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600">
+            Login with Google
+          </button>
+        </Link>
       </div>
     </div>
   );
