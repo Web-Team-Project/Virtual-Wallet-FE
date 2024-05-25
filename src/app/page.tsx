@@ -413,18 +413,27 @@ export default function GlobeDemo() {
           className="div"
         >
           <h2 className="text-center text-xl md:text-4xl font-bold text-black dark:text-white">
-            We sell soap worldwide
+            Our Global Payment System
           </h2>
           <div className="text-center mt-4">
-            <Link href="/asd" passHref>
+            <Link href="/signup" passHref>
               <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
-                Learn More
+                Sign Up with Email
+              </button>
+            </Link>
+            <Link href="/signin" passHref>
+              <button className="ml-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+                Sign In
+              </button>
+            </Link>
+            <Link href="/google-login" passHref>
+              <button className="ml-2 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600">
+                Login with Google
               </button>
             </Link>
           </div>
           <p className="text-center text-base md:text-lg font-normal text-neutral-700 dark:text-neutral-200 max-w-md mt-2 mx-auto">
-            This globe is interactive and customizable. Have fun with it, and
-            don&apos;t forget to share it. :)
+            Experience seamless transactions with our interactive and customizable global payment system. Join us and make your transactions smoother and more secure.
           </p>
         </motion.div>
         <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40" />
