@@ -396,6 +396,27 @@ export default function GlobalPaymentSystem() {
     },
   ];
 
+  const handleRedirect = async () => {
+    try {
+        const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/login", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            mode: 'cors',
+        });
+
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            const data = await response.json();
+            console.error('Failed to redirect', data);
+        }
+    } catch (error) {
+        console.error('An error occurred', error);
+    }
+};
+
   return (
     <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
       <div className="w-full absolute inset-0 h-screen">
@@ -437,21 +458,23 @@ export default function GlobalPaymentSystem() {
         </div>
       </div>
       <div className="text-center mt-4 z-20">
-        <Link href="/signup" passHref>
-          <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
-            Sign Up with Email
-          </button>
-        </Link>
         <Link href="/signin" passHref>
-          <button className="ml-2 px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
-            Sign In
+          <button className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+            Sign in
           </button>
         </Link>
-        <Link href="/google-login" passHref>
-          <button className="ml-2 px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600">
-            Login with Google
-          </button>
-        </Link>
+        <div className="mt-4">
+          <Link href="/signup" passHref>
+            <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
+              Sign up with Email
+            </button>
+          </Link>
+        </div>
+        <div className="mt-4">
+        <button onClick={() => window.open('https://virtual-wallet-87bx.onrender.com/api/v1/login')} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600">
+          Sign in with Google
+        </button>
+      </div>
       </div>
     </div>
   );
