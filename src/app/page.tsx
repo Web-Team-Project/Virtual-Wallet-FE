@@ -3,9 +3,9 @@ import React from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { SparklesCore } from "./components/ui/sparkles";
+import { BackgroundBeams } from "./components/ui/background-beams";
 
-const World = dynamic(() => import("../app/components/ui/globe").then((m) => m.World), {
+const World = dynamic(() => import("./components/ui/globe").then((m) => m.World), {
   ssr: false,
 });
 
@@ -399,83 +399,96 @@ export default function GlobalPaymentSystem() {
   const handleRedirect = async () => {
     try {
         const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/login", {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
-            mode: 'cors',
+            mode: "cors",
         });
 
         if (response.redirected) {
             window.location.href = response.url;
         } else {
             const data = await response.json();
-            console.error('Failed to redirect', data);
+            console.error("Failed to redirect", data);
         }
     } catch (error) {
-        console.error('An error occurred', error);
+        console.error("An error occurred", error);
     }
 };
 
-  return (
-    <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
-      <div className="w-full absolute inset-0 h-screen">
-        <SparklesCore
-          id="tsparticlesfullpage"
-          background="transparent"
-          minSize={0.6}
-          maxSize={1.4}
-          particleDensity={100}
-          className="w-full h-full"
-          particleColor="#FFFFFF"
-        />
-      </div>
-      <div className="relative w-full max-w-7xl mx-auto h-full md:h-[40rem] px-4">
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 1,
-          }}
-          className="text-center relative z-20"
-        >
-          <h2 className="text-xl md:text-4xl font-bold text-white">
-            Global Payment System
-          </h2>
-          <p className="text-base md:text-lg font-normal text-neutral-200 max-w-md mt-2 mx-auto">
-            Experience seamless transactions with our interactive and customizable global payment system. Join us and make your transactions smoother and more secure.
-          </p>
-        </motion.div>
-        <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent to-black z-10" />
-        <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
-          <World data={sampleArcs} globeConfig={globeConfig} />;
-        </div>
-      </div>
-      <div className="text-center mt-4 z-20">
-        <Link href="/signin" passHref>
-          <button className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
-            Sign in
-          </button>
-        </Link>
-        <div className="mt-4">
-          <Link href="/signup" passHref>
-            <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
-              Sign up with Email
-            </button>
-          </Link>
-        </div>
-        <div className="mt-4">
-        <button onClick={() => window.open('https://virtual-wallet-87bx.onrender.com/api/v1/login')} className="px-4 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600">
-          Sign in with Google
-        </button>
-      </div>
+return (
+  <div className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+    <div className="w-full absolute inset-0 h-screen">
+      <BackgroundBeams />
+    </div>
+    <div className="relative w-full max-w-7xl mx-auto h-full md:h-[40rem] px-4">
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 20,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 1,
+        }}
+        className="text-center relative z-20"
+      >
+        <h2 className="text-xl md:text-4xl font-bold text-white">
+          Global Payment System
+        </h2>
+        <p className="text-base md:text-lg font-normal text-neutral-200 max-w-xl mt-2 mx-auto">
+          Experience seamless transactions with our customizable global payment system. Join us to make your transactions smoother and more secure.
+        </p>
+      </motion.div>
+      <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent to-black z-10" />
+      <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
+        <World data={sampleArcs} globeConfig={globeConfig} />
       </div>
     </div>
-  );
+    <div className="text-center mt-4 z-20">
+      <Link href="/signin" passHref>
+        <button className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+          Sign in
+        </button>
+      </Link>
+      <div className="mt-4">
+        <Link href="/signup" passHref>
+          <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
+            Sign up with email
+          </button>
+        </Link>
+      </div>
+      <div className="mt-4">
+        <button onClick={() => window.open("https://virtual-wallet-87bx.onrender.com/api/v1/login")} className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block">
+          <span className="absolute inset-0 overflow-hidden rounded-full">
+            <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+          </span>
+          <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
+            <span>{`Sign in with Google`}</span>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                d="M10.75 8.75L14.25 12L10.75 15.25"
+              ></path>
+            </svg>
+          </div>
+          <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+);
 }

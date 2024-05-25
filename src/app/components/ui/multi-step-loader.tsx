@@ -50,7 +50,7 @@ const LoaderCore = ({
     <div className="flex relative justify-start max-w-xl mx-auto flex-col mt-40">
       {loadingStates.map((loadingState, index) => {
         const distance = Math.abs(index - value);
-        const opacity = Math.max(1 - distance * 0.2, 0); // Minimum opacity is 0, keep it 0.2 if you're sane.
+        const opacity = Math.max(1 - distance * 0.2, 0);
 
         return (
           <motion.div
@@ -58,7 +58,7 @@ const LoaderCore = ({
             className={cn("text-left flex gap-2 mb-4")}
             initial={{ opacity: 0, y: -(value * 40) }}
             animate={{ opacity: opacity, y: -(value * 40) }}
-            transition={{ duration: 10}}
+            transition={{ duration: 10 }}
           >
             <div>
               {index > value && (
