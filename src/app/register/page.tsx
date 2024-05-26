@@ -1,13 +1,34 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
 
 export default function SignupForm() {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState("");
+  const [hashed_password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+
+    try {
+      const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, hashed_password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("An error occurred while signing up.");
+      }
+  
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -17,17 +38,29 @@ export default function SignupForm() {
           Welcome to Global Payment System
         </h2>
         <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-        Feel free to explore our services. You can sign up to access our platform. We're excited to have you onboard!
+          Feel free to explore our services. You can sign up to access our platform. We're excited to have you onboard!
         </p>
 
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" placeholder="user@globalps.com" type="email" />
+            <Input 
+              id="email" 
+              placeholder="user@globalps.com" 
+              type="email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" placeholder="••••••••" type="password" />
+            <Input 
+              id="password" 
+              placeholder="••••••••" 
+              type="password" 
+              value={hashed_password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </LabelInputContainer>
 
           <button
