@@ -456,11 +456,9 @@ return (
         </button>
       </Link>
       <div className="mt-4">
-        <Link href="/signup" passHref>
-          <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
+          <button onClick={() => window.location.href = "/register"} className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600">
             Sign up with email
           </button>
-        </Link>
       </div>
       <div className="mt-4">
         <button onClick={() => window.open("https://virtual-wallet-87bx.onrender.com/api/v1/login")} className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block">
