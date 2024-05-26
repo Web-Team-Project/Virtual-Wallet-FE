@@ -10,7 +10,7 @@ const shareTechMono = Share_Tech_Mono({
 
 export const CreditCard = () => {
   return (
-    <div className="fixed left-1/2 top-1/2 -translate-y-1/2 ml-20">
+    <div className="fixed left-1/2 top-1/2 transform -translate-y-1/2 ml-20">
       <Tilt
         options={{ max: 25, scale: 1.05, speed: 400 }}
         className={`${shareTechMono.className} w-[425px] h-[270px] bg-gradient-to-tr rounded-2xl shadow-xl transform transition-transform duration-500 ease-in-out from-[#00C9FF] to-[#92FE9D]`}
