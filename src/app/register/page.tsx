@@ -38,7 +38,7 @@ export default function SignupForm() {
           Welcome to Global Payment System
         </h2>
         <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-          Feel free to explore our services. You can sign up to access our platform. We're excited to have you onboard!
+          Feel free to explore our services. You can sign up to access our platform. We are excited to have you onboard!
         </p>
 
         <form className="my-8" onSubmit={handleSubmit}>
