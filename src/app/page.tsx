@@ -450,8 +450,8 @@ return (
       </div>
     </div>
     <div className="text-center mt-4 z-20">
-      <Link href="/signin" passHref>
-        <button className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+      <Link href="/login" passHref>
+        <button onClick={() => window.location.href = "/login"} className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
           Sign in
         </button>
       </Link>
