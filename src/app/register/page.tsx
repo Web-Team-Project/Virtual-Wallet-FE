@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
+import Link from "next/link";
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
@@ -38,7 +39,7 @@ export default function SignupForm() {
           Welcome to Global Payment System
         </h2>
         <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-          Feel free to explore our services. You can sign up to access our platform. We are excited to have you onboard!
+          Feel free to explore our services. You can sign up to access our platform. We're excited to have you onboard!
         </p>
 
         <form className="my-8" onSubmit={handleSubmit}>
@@ -71,6 +72,17 @@ export default function SignupForm() {
             <BottomGradient />
           </button>
         </form>
+
+        <div className="mt-4 text-neutral">
+          <p className="text-neutral-600 dark:text-neutral-300">
+            Already have an account?{" "}
+            <Link href="/login">
+              <span className="text-neutral-700 dark:text-cyan-500 font-medium">
+                Sign in
+              </span>
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

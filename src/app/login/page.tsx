@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
+import Link from "next/link";
 
 export default function SigninForm() {
   const [email, setEmail] = useState("");
@@ -67,10 +68,21 @@ export default function SigninForm() {
             className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
             type="submit"
           >
-            Sign up &rarr;
+            Sign in &rarr;
             <BottomGradient />
           </button>
         </form>
+
+        <div className="mt-4 text-neutral">
+          <p className="text-neutral-600 dark:text-neutral-300">
+            Not registered yet?{" "}
+            <Link href="/register">
+              <span className="text-neutral-700 dark:text-cyan-500 font-medium">
+                Sign up
+              </span>
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
