@@ -36,10 +36,10 @@ export default function SignupForm() {
     <div className="flex items-center justify-center h-screen">
       <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-          Welcome to Global Payment System
+          Sign up
         </h2>
         <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-          Feel free to explore our services. You can sign up to access our platform. We're excited to have you onboard!
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec
         </p>
 
         <form className="my-8" onSubmit={handleSubmit}>
