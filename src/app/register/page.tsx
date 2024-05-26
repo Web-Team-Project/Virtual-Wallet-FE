@@ -4,10 +4,12 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [hashed_password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +29,8 @@ export default function SignupForm() {
   
       const data = await response.json();
       console.log(data.message);
+
+      router.push("/verify_email");
     } catch (error) {
       console.error(error);
     }
