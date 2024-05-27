@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { HoveredLink, Menu, MenuItem } from "../components/ui/navbar-menu";
+import { useSignOut } from "./sign-out";
 import { cn } from "../utils/cn";
 
 export default function NavbarFunc() {
@@ -13,11 +14,16 @@ export default function NavbarFunc() {
 
 function Navbar({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
+  const signOut = useSignOut();
   const user = "Account";
+
+  const handleSignOut = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    await signOut();
+  };
+
   return (
-    <div
-      className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}
-    >
+    <div className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}>
       <Menu setActive={setActive}>
         <MenuItem setActive={setActive} active={active} item="About">
           <div className="flex flex-col space-y-4 text-sm">
@@ -29,7 +35,7 @@ function Navbar({ className }: { className?: string }) {
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/dashboard">Dashboard</HoveredLink>
             <HoveredLink href="/profile">View Profile</HoveredLink>
-            <HoveredLink href="/sign-out">Sign out</HoveredLink>
+            <HoveredLink href="#" onClick={handleSignOut}>Sign out</HoveredLink>
           </div>
         </MenuItem>
       </Menu>
