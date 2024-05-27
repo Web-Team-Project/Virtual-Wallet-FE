@@ -4,10 +4,12 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SigninForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +29,8 @@ export default function SigninForm() {
   
       const data = await response.json();
       console.log(data.message);
+
+      router.push("/home");
     } catch (error) {
       console.error(error);
     }
