@@ -5,6 +5,7 @@ import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { IconBrandGoogle } from "@tabler/icons-react";
 
 export default function SigninForm() {
   const [email, setEmail] = useState("");
@@ -22,7 +23,7 @@ export default function SigninForm() {
         },
         body: JSON.stringify({ email, password }),
       });
-
+      
       if (!response.ok) {
         throw new Error("An error occurred while signing in.");
       }
@@ -36,15 +37,16 @@ export default function SigninForm() {
     }
   };
 
+  const handleGoogleSignin = () => {
+    window.location.href = "https://virtual-wallet-87bx.onrender.com/api/v1/login";
+  };
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
           Login
         </h2>
-        <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nec
-        </p>
 
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
@@ -73,6 +75,20 @@ export default function SigninForm() {
             type="submit"
           >
             Sign in &rarr;
+            <BottomGradient />
+          </button>
+
+          <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+
+          <button
+            className=" relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+            type="button"
+            onClick={handleGoogleSignin}
+          >
+            <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
+            <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+              Sign in with Google
+            </span>
             <BottomGradient />
           </button>
         </form>
