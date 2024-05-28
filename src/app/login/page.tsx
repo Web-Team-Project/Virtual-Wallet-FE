@@ -23,17 +23,20 @@ export default function SigninForm() {
         },
         body: JSON.stringify({ email, password }),
       });
-      
+
       if (!response.ok) {
         throw new Error("An error occurred while signing in.");
       }
-  
+
       const data = await response.json();
-      console.log(data.message);
+      console.log("Login response data:", data);
+
+      localStorage.setItem('session', JSON.stringify(data));
+      console.log("Session stored in localStorage:", data);
 
       router.push("/home");
     } catch (error) {
-      console.error(error);
+      console.error("Error during login:", error);
     }
   };
 

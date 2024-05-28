@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { HoveredLink, Menu, MenuItem } from "../components/ui/navbar-menu";
 import { useSignOut } from "./sign-out";
 import { cn } from "../utils/cn";
+import { useRouter } from "next/navigation";
 
 export default function NavbarFunc() {
   return (
@@ -16,6 +17,45 @@ function Navbar({ className }: { className?: string }) {
   const [active, setActive] = useState<string | null>(null);
   const signOut = useSignOut();
   const user = "Account";
+  const router = useRouter();
+
+  const handleViewProfile = async (event: React.MouseEvent) => {
+    event.preventDefault();
+
+    try {
+      const session = JSON.parse(localStorage.getItem('session') || '{}');
+
+      if (!session || !session.id) {
+        console.error("No valid session found. Please log in.");
+        throw new Error("No valid session found. Please log in.");
+      }
+
+      console.log("Session retrieved from localStorage:", session);
+
+      const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/users/info", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.id}`,
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.error("Unauthorized: Redirecting to login.");
+          router.push("/login");
+        }
+        throw new Error("An error occurred while fetching user data.");
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      router.push("/profile");
+    } catch (error) {
+      console.error("Error during profile fetch:", error);
+    }
+  };
 
   const handleSignOut = async (event: React.MouseEvent) => {
     event.preventDefault();
@@ -34,7 +74,7 @@ function Navbar({ className }: { className?: string }) {
         <MenuItem setActive={setActive} active={active} item={user}>
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/dashboard">Dashboard</HoveredLink>
-            <HoveredLink href="/profile">View Profile</HoveredLink>
+            <HoveredLink href="#" onClick={handleViewProfile}>View Profile</HoveredLink>
             <HoveredLink href="#" onClick={handleSignOut}>Sign out</HoveredLink>
           </div>
         </MenuItem>
