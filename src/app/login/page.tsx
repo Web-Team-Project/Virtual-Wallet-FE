@@ -16,11 +16,12 @@ export default function SigninForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/token", {
+      const response = await fetch("http://localhost:8000/api/v1/token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -41,7 +42,7 @@ export default function SigninForm() {
   };
 
   const handleGoogleSignin = () => {
-    window.location.href = "https://virtual-wallet-87bx.onrender.com/api/v1/login";
+    window.location.href = "http://localhost:8000/api/v1/login";
   };
 
   return (

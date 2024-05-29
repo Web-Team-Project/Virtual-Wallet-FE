@@ -32,12 +32,13 @@ function Navbar({ className }: { className?: string }) {
 
       console.log("Session retrieved from localStorage:", session);
 
-      const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/users/info", {
+      const response = await fetch("http://localhost:8000/api/v1/users/info", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${session.id}`,
         },
+        credentials: "include",
       });
 
       if (!response.ok) {
