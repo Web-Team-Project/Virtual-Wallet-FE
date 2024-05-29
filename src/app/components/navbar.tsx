@@ -32,7 +32,7 @@ function Navbar({ className }: { className?: string }) {
 
       console.log("Session retrieved from localStorage:", session);
 
-      const response = await fetch("http://localhost:8000/api/v1/users/{email}", {
+      const response = await fetch(`http://localhost:8000/api/v1/users/${session.email}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

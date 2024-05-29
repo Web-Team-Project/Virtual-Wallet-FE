@@ -23,10 +23,12 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile>(profileData);
   const [isAddingPhone, setIsAddingPhone] = useState(false);
   const [newPhone, setNewPhone] = useState("");
+  const [contacts, setContacts] = useState([]);
+  const [showContacts, setShowContacts] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function getSession() {
-    const session = localStorage.getItem('session');
+    const session = localStorage.getItem("session");
     if (session) {
       return JSON.parse(session);
     }
@@ -57,6 +59,35 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
+  const fetchContacts = async () => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/contacts", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setContacts(data);
+          setShowContacts(true);
+        } else {
+          console.error("Failed to fetch contacts:", await response.text());
+        }
+      } catch (error) {
+        console.error("An error occurred while fetching the contacts:", error);
+      }
+    }
+  };
+
+  const handleContactsClick = () => {
+    fetchContacts();
+  };
+
   const handleAddPhoneClick = () => {
     setIsAddingPhone(true);
   };
@@ -68,11 +99,17 @@ export default function ProfilePage() {
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    const session = getSession();
+    if (!session) {
+      setError("No session found.");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:8000/api/v1/users/phone", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.id}`,
         },
         credentials: "include",
         body: JSON.stringify({ phone_number: newPhone }),
@@ -83,17 +120,17 @@ export default function ProfilePage() {
         setNewPhone("");
       } else {
         const errorData = await response.json();
-        setError(errorData.detail || "Failed to add phone number");
+        setError(errorData.detail || "Failed to add phone number.");
         console.error("Failed to add phone number:", errorData.detail || "Unknown error");
       }
     } catch (error) {
-      setError("An error occurred while adding the phone number");
+      setError("An error occurred while adding the phone number.");
       console.error("An error occurred", error);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black">
       <BackgroundGradient className="flex flex-col items-center justify-center rounded-[22px] max-w-lg p-4 sm:p-10 bg-white dark:bg-zinc-900">
         <div className="flex items-center justify-center w-48 h-48">
           <Image
@@ -108,7 +145,7 @@ export default function ProfilePage() {
         <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200 text-center">
           {profile.email}
         </p>
-
+  
         {profile.phone ? (
           <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
             {profile.phone}
@@ -145,6 +182,35 @@ export default function ProfilePage() {
           </>
         )}
       </BackgroundGradient>
+  
+      <div className="flex flex-col items-center">
+        <button
+          className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+          onClick={handleContactsClick}
+        >
+          Contacts
+        </button>
+        {showContacts && (
+          <table className="mt-4 text-left divide-x divide-black rounded-lg">
+            <thead>
+              <tr>
+                <th className="px-4 border border-cyan-500 text-center">name</th>
+                <th className="px-4 border border-cyan-500 text-center">email</th>
+                <th className="px-4 border border-cyan-500 text-center">phone number</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contacts.map((contact: {contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
+                <tr key={contact.contact_name}>
+                  <td className="px-4 border border-cyan-500 text-center rounded-lg">{contact.contact_name}</td>
+                  <td className="px-4 border border-cyan-500 text-center rounded-lg">{contact.contact_email}</td>
+                  <td className="px-4 border border-cyan-500 text-center rounded-lg">{contact.contact_phone_number}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }
