@@ -23,7 +23,7 @@ function Navbar({ className }: { className?: string }) {
     event.preventDefault();
 
     try {
-      const session = JSON.parse(localStorage.getItem('session') || '{}');
+      const session = JSON.parse(localStorage.getItem("session") || "{}");
 
       if (!session || !session.id) {
         console.error("No valid session found. Please log in.");
@@ -32,7 +32,7 @@ function Navbar({ className }: { className?: string }) {
 
       console.log("Session retrieved from localStorage:", session);
 
-      const response = await fetch("http://localhost:8000/api/v1/users/info", {
+      const response = await fetch("http://localhost:8000/api/v1/users/{email}", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
