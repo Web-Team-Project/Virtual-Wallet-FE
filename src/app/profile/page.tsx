@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import Image from "next/image";
 
@@ -25,7 +25,9 @@ export default function ProfilePage() {
   const [newPhone, setNewPhone] = useState("");
   const [contacts, setContacts] = useState([]);
   const [showContacts, setShowContacts] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [filteredContacts, setFilteredContacts] = useState([]);
 
   function getSession() {
     const session = localStorage.getItem("session");
@@ -35,7 +37,7 @@ export default function ProfilePage() {
     return null;
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchProfile = async () => {
       const session = getSession();
       console.log("Session retrieved from localStorage:", session)
@@ -59,11 +61,12 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
-  const fetchContacts = async () => {
+  const fetchContacts = async (search: string = '') => {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch("http://localhost:8000/api/v1/contacts", {
+        const query = search ? `?search=${encodeURIComponent(search)}` : '';
+        const response = await fetch(`http://localhost:8000/api/v1/contacts${query}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -73,7 +76,12 @@ export default function ProfilePage() {
         });
         if (response.ok) {
           const data = await response.json();
-          setContacts(data);
+          setContacts(data); // This will always contain all contacts
+          if (search) {
+            setFilteredContacts(data); // This will contain filtered contacts when search is used
+          } else {
+            setFilteredContacts([]); // Reset filtered contacts when search is cleared
+          }
           setShowContacts(true);
         } else {
           console.error("Failed to fetch contacts:", await response.text());
@@ -84,8 +92,9 @@ export default function ProfilePage() {
     }
   };
 
-  const handleContactsClick = () => {
-    fetchContacts();
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    fetchContacts(e.target.value);
   };
 
   const handleAddPhoneClick = () => {
@@ -145,7 +154,6 @@ export default function ProfilePage() {
         <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200 text-center">
           {profile.email}
         </p>
-  
         {profile.phone ? (
           <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
             {profile.phone}
@@ -183,32 +191,37 @@ export default function ProfilePage() {
         )}
       </BackgroundGradient>
   
-      <div className="flex flex-col items-center">
-        <button
-          className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
-          onClick={handleContactsClick}
-        >
-          Contacts
-        </button>
+      <div className="flex flex-col items-center w-full">
+      <button
+        className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+        onClick={() => {
+          setShowContacts(!showContacts);
+          if (!showContacts) {
+            fetchContacts();
+          }
+        }}
+      >
+        Contacts
+      </button>
         {showContacts && (
-          <table className="mt-4 text-left divide-x divide-black rounded-lg">
-            <thead>
-              <tr>
-                <th className="px-4 border border-cyan-500 text-center">name</th>
-                <th className="px-4 border border-cyan-500 text-center">email</th>
-                <th className="px-4 border border-cyan-500 text-center">phone number</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contacts.map((contact: {contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
-                <tr key={contact.contact_name}>
-                  <td className="px-4 border border-cyan-500 text-center rounded-lg">{contact.contact_name}</td>
-                  <td className="px-4 border border-cyan-500 text-center rounded-lg">{contact.contact_email}</td>
-                  <td className="px-4 border border-cyan-500 text-center rounded-lg">{contact.contact_phone_number}</td>
-                </tr>
+          <>
+            <input
+              type="text"
+              placeholder="Search by email or phone"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="border p-2 my-4 w-full max-w-md text-black"
+            />
+            <div className="w-full max-w-md mt-4">
+              {(filteredContacts.length > 0 ? filteredContacts : contacts).map((contact: { contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
+                <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
+                  <span className="text-lg font-bold text-black dark:text-white">{contact.contact_name}</span>
+                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_email}</span>
+                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_phone_number}</span>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>
