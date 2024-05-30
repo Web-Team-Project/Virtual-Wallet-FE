@@ -28,6 +28,7 @@ export default function ProfilePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [filteredContacts, setFilteredContacts] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
 
   function getSession() {
     const session = localStorage.getItem("session");
@@ -40,7 +41,6 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       const session = getSession();
-      console.log("Session retrieved from localStorage:", session)
       if (session) {
         const response = await fetch(`http://localhost:8000/api/v1/users/${session.email}`, {
           method: "GET",
@@ -76,11 +76,12 @@ export default function ProfilePage() {
         });
         if (response.ok) {
           const data = await response.json();
-          setContacts(data); // This will always contain all contacts
+          console.log("Fetched contacts:", data);  // Debugging line
+          setContacts(data);
           if (search) {
-            setFilteredContacts(data); // This will contain filtered contacts when search is used
+            setFilteredContacts(data);
           } else {
-            setFilteredContacts([]); // Reset filtered contacts when search is cleared
+            setFilteredContacts([]);
           }
           setShowContacts(true);
         } else {
@@ -92,9 +93,84 @@ export default function ProfilePage() {
     }
   };
 
+  const searchUsers = async (search: string) => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/users/search?query=${encodeURIComponent(search)}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setSearchResults(data);
+        } else {
+          console.error("Failed to search users:", await response.text());
+        }
+      } catch (error) {
+        console.error("An error occurred while searching for users:", error);
+      }
+    }
+  };
+
+  const createContact = async (userContactId: string) => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/contacts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({ user_contact_id: userContactId }),
+        });
+        if (response.ok) {
+          fetchContacts();
+        } else {
+          console.error("Failed to create contact:", await response.text());
+        }
+      } catch (error) {
+        console.error("An error occurred while creating the contact:", error);
+      }
+    }
+  };
+
+  const deleteContact = async (contactId: string) => {
+    const session = getSession();
+    if (!contactId) {
+      console.error("Contact ID is undefined");
+      return;
+    }
+    if (session) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/contacts/${contactId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+        });
+        if (response.ok) {
+          fetchContacts();
+        } else {
+          console.error("Failed to delete contact:", await response.text());
+        }
+      } catch (error) {
+        console.error("An error occurred while deleting the contact:", error);
+      }
+    }
+  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    fetchContacts(e.target.value);
+    searchUsers(e.target.value);
   };
 
   const handleAddPhoneClick = () => {
@@ -190,19 +266,19 @@ export default function ProfilePage() {
           </>
         )}
       </BackgroundGradient>
-  
+
       <div className="flex flex-col items-center w-full">
-      <button
-        className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
-        onClick={() => {
-          setShowContacts(!showContacts);
-          if (!showContacts) {
-            fetchContacts();
-          }
-        }}
-      >
-        Contacts
-      </button>
+        <button
+          className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+          onClick={() => {
+            setShowContacts(!showContacts);
+            if (!showContacts) {
+              fetchContacts();
+            }
+          }}
+        >
+          Contacts
+        </button>
         {showContacts && (
           <>
             <input
@@ -213,11 +289,31 @@ export default function ProfilePage() {
               className="border p-2 my-4 w-full max-w-md text-black"
             />
             <div className="w-full max-w-md mt-4">
-              {(filteredContacts.length > 0 ? filteredContacts : contacts).map((contact: { contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
+              {searchResults.map((user: { id: string, name: string, email: string }, index: number) => (
+                <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
+                  <span className="text-lg font-bold text-black dark:text-white">{user.name}</span>
+                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{user.email}</span>
+                  <button
+                    className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+                    onClick={() => createContact(user.id)}
+                  >
+                    Add Contact
+                  </button>
+                </div>
+              ))}
+            </div>
+            <div className="w-full max-w-md mt-4">
+              {(filteredContacts.length > 0 ? filteredContacts : contacts).map((contact: { id: string, contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
                 <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
                   <span className="text-lg font-bold text-black dark:text-white">{contact.contact_name}</span>
                   <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_email}</span>
                   <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_phone_number}</span>
+                  <button
+                    className="rounded-full px-4 py-2 text-white bg-red-600 mt-4 text-xs font-bold"
+                    onClick={() => deleteContact(contact.id)}
+                  >
+                    Delete Contact
+                  </button>
                 </div>
               ))}
             </div>
