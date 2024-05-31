@@ -76,7 +76,7 @@ export default function ProfilePage() {
         });
         if (response.ok) {
           const data = await response.json();
-          console.log("Fetched contacts:", data);  // Debugging line
+          console.log("Fetched contacts:", data);
           setContacts(data);
           if (search) {
             setFilteredContacts(data);
@@ -303,19 +303,21 @@ export default function ProfilePage() {
               ))}
             </div>
             <div className="w-full max-w-md mt-4">
-              {(filteredContacts.length > 0 ? filteredContacts : contacts).map((contact: { id: string, contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
-                <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
-                  <span className="text-lg font-bold text-black dark:text-white">{contact.contact_name}</span>
-                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_email}</span>
-                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_phone_number}</span>
+            {(filteredContacts.length > 0 ? filteredContacts : contacts).map((contact: { contact_id: string, contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
+              <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
+                <span className="text-lg font-bold text-black dark:text-white">{contact.contact_name}</span>
+                <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_email}</span>
+                <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_phone_number}</span>
+                {contact.contact_id && (
                   <button
                     className="rounded-full px-4 py-2 text-white bg-red-600 mt-4 text-xs font-bold"
-                    onClick={() => deleteContact(contact.id)}
+                    onClick={() => deleteContact(contact.contact_id)}
                   >
                     Delete Contact
                   </button>
-                </div>
-              ))}
+                )}
+              </div>
+            ))}
             </div>
           </>
         )}
