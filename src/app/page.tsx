@@ -416,10 +416,10 @@ export default function GlobalPaymentSystem() {
           className="text-center relative z-20"
         >
           <h2 className="text-xl md:text-4xl font-bold text-white">
-            Global Payment System
+            terraWallet
           </h2>
           <p className="text-base md:text-lg font-normal text-neutral-200 max-w-xl mt-2 mx-auto">
-            Experience seamless transactions with our customizable global payment system. Join us to make your transactions smoother and more secure.
+            Experience seamless transactions with our payment system. Join us to make your transactions smoother and more secure.
           </p>
         </motion.div>
         <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent to-black z-10" />
