@@ -25,10 +25,12 @@ export default function ProfilePage() {
   const [newPhone, setNewPhone] = useState("");
   const [contacts, setContacts] = useState([]);
   const [showContacts, setShowContacts] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [filteredContacts, setFilteredContacts] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [newContactName, setNewContactName] = useState("");
+  const [newContactEmail, setNewContactEmail] = useState("");
 
   function getSession() {
     const session = localStorage.getItem("session");
@@ -61,11 +63,11 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
-  const fetchContacts = async (search: string = '') => {
+  const fetchContacts = async (search: string = "") => {
     const session = getSession();
     if (session) {
       try {
-        const query = search ? `?search=${encodeURIComponent(search)}` : '';
+        const query = search ? `?search=${encodeURIComponent(search)}` : "";
         const response = await fetch(`http://localhost:8000/api/v1/contacts${query}`, {
           method: "GET",
           headers: {
@@ -108,6 +110,7 @@ export default function ProfilePage() {
         if (response.ok) {
           const data = await response.json();
           setSearchResults(data);
+          console.log("Search results:", data);
         } else {
           console.error("Failed to search users:", await response.text());
         }
@@ -117,26 +120,52 @@ export default function ProfilePage() {
     }
   };
 
-  const createContact = async (userContactId: string) => {
+  const createContact = async (e: React.FormEvent) => {
+    e.preventDefault();
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch("http://localhost:8000/api/v1/contacts", {
+        const userResponse = await fetch(`http://localhost:8000/api/v1/users/${encodeURIComponent(newContactEmail)}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+        });
+  
+        if (!userResponse.ok) {
+          throw new Error(`HTTP error! Status: ${userResponse.status}`);
+        }
+  
+        const userData = await userResponse.json();
+        const userContactId = userData.id;
+  
+        const contactResponse = await fetch("http://localhost:8000/api/v1/contacts", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${session.id}`,
           },
           credentials: "include",
-          body: JSON.stringify({ user_contact_id: userContactId }),
+          body: JSON.stringify({
+            user_contact_id: userContactId,
+            name: newContactName,
+            email: newContactEmail,
+          }),
         });
-        if (response.ok) {
-          fetchContacts();
-        } else {
-          console.error("Failed to create contact:", await response.text());
+  
+        if (!contactResponse.ok) {
+          throw new Error(`HTTP error! Status: ${contactResponse.status}`);
         }
+  
+        const contactData = await contactResponse.json();
+        console.log("New contact created:", contactData);
+        setNewContactName("");
+        setNewContactEmail("");
+        fetchContacts();
+  
       } catch (error) {
-        console.error("An error occurred while creating the contact:", error);
+        console.error("Failed to create contact:", error);
       }
     }
   };
@@ -144,7 +173,7 @@ export default function ProfilePage() {
   const deleteContact = async (contactId: string) => {
     const session = getSession();
     if (!contactId) {
-      console.error("Contact ID is undefined");
+      console.error("Contact ID is undefined.");
       return;
     }
     if (session) {
@@ -286,22 +315,8 @@ export default function ProfilePage() {
               placeholder="Search by email or phone"
               value={searchTerm}
               onChange={handleSearchChange}
-              className="border p-2 my-4 w-full max-w-md text-black"
+              className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
             />
-            <div className="w-full max-w-md mt-4">
-              {searchResults.map((user: { id: string, name: string, email: string }, index: number) => (
-                <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
-                  <span className="text-lg font-bold text-black dark:text-white">{user.name}</span>
-                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{user.email}</span>
-                  <button
-                    className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
-                    onClick={() => createContact(user.id)}
-                  >
-                    Add Contact
-                  </button>
-                </div>
-              ))}
-            </div>
             <div className="w-full max-w-md mt-4">
             {(filteredContacts.length > 0 ? filteredContacts : contacts).map((contact: { contact_id: string, contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
               <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
@@ -318,6 +333,23 @@ export default function ProfilePage() {
                 )}
               </div>
             ))}
+            </div>
+            <div className="mt-4 w-full max-w-md">
+              <form onSubmit={createContact} className="flex flex-col items-center">
+                <input
+                  type="email"
+                  placeholder="Contact email"
+                  value={newContactEmail}
+                  onChange={(e) => setNewContactEmail(e.target.value)}
+                  className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
+                />
+                <button
+                  type="submit"
+                  className="rounded-full px-4 py-2 text-white bg-blue-600 mt-4 text-xs font-bold"
+                >
+                  Create Contact
+                </button>
+              </form>
             </div>
           </>
         )}
