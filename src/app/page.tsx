@@ -8,7 +8,7 @@ const World = dynamic(() => import("./components/ui/globe").then((m) => m.World)
   ssr: false,
 });
 
-export default function GlobalPaymentSystem() {
+export default function terraWallet() {
   const globeConfig = {
     pointSize: 4,
     globeColor: "#062056",

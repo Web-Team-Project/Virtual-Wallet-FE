@@ -54,7 +54,7 @@ export default function SignupForm() {
             <Label htmlFor="email">Email Address</Label>
             <Input 
               id="email" 
-              placeholder="user@globalps.com" 
+              placeholder="user@example.com"
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}

@@ -1,16 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { IconBrandGoogle } from "@tabler/icons-react";
+import axios from "axios";
 
 export default function SigninForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ export default function SigninForm() {
       const data = await response.json();
       console.log("Login response data:", data);
 
-      localStorage.setItem('session', JSON.stringify(data));
+      localStorage.setItem("session", JSON.stringify(data));
       console.log("Session stored in localStorage:", data);
 
       router.push("/home");
@@ -41,9 +43,35 @@ export default function SigninForm() {
     }
   };
 
-  const handleGoogleSignin = () => {
+  const handleGoogleSignin = async () => {
     window.location.href = "http://localhost:8000/api/v1/login";
   };
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (code) {
+      const fetchUserinfo = async (code: string) => {
+        const tokenData = {
+          code,
+          client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+          client_secret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET,
+          redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
+          grant_type: "authorization_code",
+        };
+
+        const tokenResponse = await axios.post("http://localhost:8000/api/v1/auth/callback", tokenData);
+        const accessToken = tokenResponse.data;
+
+        const headers = { Authorization: `Bearer ${accessToken}` };
+        const userinfoResponse = await axios.get("http://localhost:8000/api/v1/protected", { headers });
+
+        localStorage.setItem("session", JSON.stringify(userinfoResponse.data));
+        router.push("/home");
+      };
+
+      fetchUserinfo(code as string);
+    }
+  }, [searchParams]);
 
   return (
     <div className="flex items-center justify-center h-screen">
@@ -57,7 +85,7 @@ export default function SigninForm() {
             <Label htmlFor="email">Email Address</Label>
             <Input 
               id="email" 
-              placeholder="user@globalps.com" 
+              placeholder="user@example.com"
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
