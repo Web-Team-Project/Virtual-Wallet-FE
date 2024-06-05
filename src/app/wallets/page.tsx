@@ -6,19 +6,13 @@ interface Wallet {
     currency: string;
   }
   
-  interface WalletOperation {
-    amount: number;
-    currency: string;
-  }
-  
   const WalletsPage = () => {
     const [wallets, setWallets] = useState<Wallet[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [addAmount, setAddAmount] = useState<number>(0);
-    const [addCurrency, setAddCurrency] = useState<string>("");
     const [withdrawAmount, setWithdrawAmount] = useState<number>(0);
-    const [withdrawCurrency, setWithdrawCurrency] = useState<string>("");
+    const [newWalletCurrency, setNewWalletCurrency] = useState<string>("");
 
   function getSession() {
     const session = localStorage.getItem("session");
@@ -52,6 +46,30 @@ interface Wallet {
         setError("Failed to fetch wallets.");
       } finally {
         setIsLoading(false);
+      }
+    }
+  };
+
+  const handleCreateWallet = async (currency: string) => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch("http://localhost:8000/api/v1/wallet/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+          body: JSON.stringify({ currency }),
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to create wallet: ${response.status}`);
+        }
+        await fetchWallets();
+      } catch (error) {
+        console.error("An error occurred while creating a new wallet:", error);
+        setError("Failed to create a new wallet.");
       }
     }
   };
@@ -115,36 +133,53 @@ interface Wallet {
       {isLoading ? (
         <p>Loading wallets...</p>
       ) : (
-        wallets.length > 0 ? (
-          wallets.map((wallet, index) => (
-            <div key={index} className="p-4 mb-4 border rounded shadow">
-              <div className="flex justify-between items-center mb-2">
-                <p>Currency: <span className="font-semibold">{wallet.currency}</span></p>
-                <p>Balance: <span className="font-semibold">{wallet.balance}</span></p>
+        <div>
+          {wallets.length > 0 ? (
+            wallets.map((wallet, index) => (
+              <div key={index} className="p-4 mb-4 border rounded shadow">
+                <div className="flex justify-between items-center mb-2">
+                  <p>Currency: <span className="font-semibold">{wallet.currency}</span></p>
+                  <p>Balance: <span className="font-semibold">{wallet.balance}</span></p>
+                </div>
+                <div className="flex gap-4">
+                  <input 
+                    type="number" 
+                    placeholder="Amount to Add" 
+                    onChange={(e) => setAddAmount(Number(e.target.value))} 
+                  />
+                  <button onClick={() => handleAddFunds(wallet, addAmount)}>Add</button>
+                  
+                  <input 
+                    type="number" 
+                    placeholder="Amount to Withdraw" 
+                    onChange={(e) => setWithdrawAmount(Number(e.target.value))} 
+                  />
+                  <button onClick={() => handleWithdrawFunds(wallet, withdrawAmount)}>Withdraw</button>
+                </div>
               </div>
-              <div className="flex gap-4">
-                <input 
-                  type="number" 
-                  placeholder="Amount to Add" 
-                  onChange={(e) => setAddAmount(Number(e.target.value))} 
-                />
-                <button onClick={() => handleAddFunds(wallet, addAmount)}>Add</button>
-                
-                <input 
-                  type="number" 
-                  placeholder="Amount to Withdraw" 
-                  onChange={(e) => setWithdrawAmount(Number(e.target.value))} 
-                />
-                <button onClick={() => handleWithdrawFunds(wallet, withdrawAmount)}>Withdraw</button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No wallets found.</p>
-        )
+            ))
+          ) : (
+            <p>No wallets found.</p>
+          )}
+        </div>
       )}
+      <div className="mt-6">
+        <h2 className="text-lg font-semibold mb-2">Create New Wallet</h2>
+        <form onSubmit={(e) => { e.preventDefault(); handleCreateWallet(newWalletCurrency); }}>
+          <select value={newWalletCurrency} onChange={(e) => setNewWalletCurrency(e.target.value)} required>
+            <option value="">Select Currency</option>
+            <option value="BGN">BGN</option>
+            <option value="EUR">EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+            <option value="BTC">BTC</option>
+            <option value="ETH">ETH</option>
+          </select>
+          <button type="submit">Create Wallet</button>
+        </form>
+      </div>
     </div>
   );
-}
+};
 
 export default WalletsPage;
