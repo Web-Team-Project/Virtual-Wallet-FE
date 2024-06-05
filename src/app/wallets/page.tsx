@@ -56,7 +56,7 @@ interface Wallet {
     }
   };
 
-  const handleAddFunds = async (operation: WalletOperation) => {
+  const handleAddFunds = async (wallet: Wallet, amount: number) => {
     const session = getSession();
     if (session) {
       try {
@@ -67,7 +67,7 @@ interface Wallet {
             "Authorization": `Bearer ${session.id}`,
           },
           credentials: "include",
-          body: JSON.stringify(operation),
+          body: JSON.stringify({ amount, currency: wallet.currency }),
         });
         if (!response.ok) {
           throw new Error(`Failed to add funds: ${response.status}`);
@@ -79,8 +79,8 @@ interface Wallet {
       }
     }
   };
-
-  const handleWithdrawFunds = async (operation: WalletOperation) => {
+  
+  const handleWithdrawFunds = async (wallet: Wallet, amount: number) => {
     const session = getSession();
     if (session) {
       try {
@@ -91,7 +91,7 @@ interface Wallet {
             "Authorization": `Bearer ${session.id}`,
           },
           credentials: "include",
-          body: JSON.stringify(operation),
+          body: JSON.stringify({ amount, currency: wallet.currency }),
         });
         if (!response.ok) {
           throw new Error(`Failed to withdraw funds: ${response.status}`);
@@ -115,37 +115,34 @@ interface Wallet {
       {isLoading ? (
         <p>Loading wallets...</p>
       ) : (
-        <div>
-          {wallets.length > 0 ? (
-            wallets.map((wallet, index) => (
-              <div key={index} className="p-4 mb-2 border rounded shadow">
+        wallets.length > 0 ? (
+          wallets.map((wallet, index) => (
+            <div key={index} className="p-4 mb-4 border rounded shadow">
+              <div className="flex justify-between items-center mb-2">
                 <p>Currency: <span className="font-semibold">{wallet.currency}</span></p>
                 <p>Balance: <span className="font-semibold">{wallet.balance}</span></p>
               </div>
-            ))
-          ) : (
-            <p>No wallets found.</p>
-          )}
-        </div>
+              <div className="flex gap-4">
+                <input 
+                  type="number" 
+                  placeholder="Amount to Add" 
+                  onChange={(e) => setAddAmount(Number(e.target.value))} 
+                />
+                <button onClick={() => handleAddFunds(wallet, addAmount)}>Add</button>
+                
+                <input 
+                  type="number" 
+                  placeholder="Amount to Withdraw" 
+                  onChange={(e) => setWithdrawAmount(Number(e.target.value))} 
+                />
+                <button onClick={() => handleWithdrawFunds(wallet, withdrawAmount)}>Withdraw</button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No wallets found.</p>
+        )
       )}
-  
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-2">Add Funds</h2>
-        <form onSubmit={(e) => { e.preventDefault(); handleAddFunds({ amount: addAmount, currency: addCurrency }); }}>
-          <input type="number" value={addAmount} onChange={(e) => setAddAmount(Number(e.target.value))} placeholder="Amount" />
-          <input type="text" value={addCurrency} onChange={(e) => setAddCurrency(e.target.value)} placeholder="Currency" />
-          <button type="submit">Add</button>
-        </form>
-      </div>
-  
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-2">Withdraw Funds</h2>
-        <form onSubmit={(e) => { e.preventDefault(); handleWithdrawFunds({ amount: withdrawAmount, currency: withdrawCurrency }); }}>
-          <input type="number" value={withdrawAmount} onChange={(e) => setWithdrawAmount(Number(e.target.value))} placeholder="Amount" />
-          <input type="text" value={withdrawCurrency} onChange={(e) => setWithdrawCurrency(e.target.value)} placeholder="Currency" />
-          <button type="submit">Withdraw</button>
-        </form>
-      </div>
     </div>
   );
 }
