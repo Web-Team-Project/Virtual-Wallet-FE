@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import { BackgroundGradient } from "../components/ui/background-gradient";
+import Image from "next/image";
 
 interface Wallet {
     balance: number;
@@ -127,59 +129,73 @@ interface Wallet {
   }, []);
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Your Wallets</h1>
-      {error && <p className="text-red-500">{error}</p>}
-      {isLoading ? (
-        <p>Loading wallets...</p>
-      ) : (
-        <div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black">
+      <div className="w-full max-w-6xl mx-auto p-4">
+        <div className="mb-6">
+          <form onSubmit={(e) => { e.preventDefault(); handleCreateWallet(newWalletCurrency); }}
+            className="flex flex-col items-center">
+            <select value={newWalletCurrency} onChange={(e) => setNewWalletCurrency(e.target.value)} required
+              className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2">
+              <option value="">Select Currency</option>
+              <option value="BGN">BGN</option>
+              <option value="EUR">EUR</option>
+              <option value="USD">USD</option>
+              <option value="GBP">GBP</option>
+              <option value="BTC">BTC</option>
+              <option value="ETH">ETH</option>
+            </select>
+            <button type="submit"
+              className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800">
+              Create Wallet
+            </button>
+          </form>
+        </div>
+        <div className="flex flex-row flex-wrap justify-center gap-4">
           {wallets.length > 0 ? (
             wallets.map((wallet, index) => (
-              <div key={index} className="p-4 mb-4 border rounded shadow">
-                <div className="flex justify-between items-center mb-2">
-                  <p>Currency: <span className="font-semibold">{wallet.currency}</span></p>
-                  <p>Balance: <span className="font-semibold">{wallet.balance}</span></p>
-                </div>
-                <div className="flex gap-4">
-                  <input 
-                    type="number" 
-                    placeholder="Amount to Add" 
-                    onChange={(e) => setAddAmount(Number(e.target.value))} 
-                  />
-                  <button onClick={() => handleAddFunds(wallet, addAmount)}>Add</button>
+              <BackgroundGradient key={index} className="flex flex-col items-center justify-center rounded-[22px] w-full sm:max-w-xs p-4 sm:p-10 bg-white dark:bg-zinc-900">
+                <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200 text-center">
+                  Wallet Currency: {wallet.currency}
+                </p>
+                <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
+                  Balance: {wallet.balance}
+                </p>
+                <div className="flex flex-col w-full mt-4">
+                  <div className="flex flex-col mb-4">
+                    <input 
+                      type="number" 
+                      placeholder="Amount to Add" 
+                      onChange={(e) => setAddAmount(Number(e.target.value))} 
+                      className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2"
+                    />
+                    <button onClick={() => handleAddFunds(wallet, addAmount)}
+                      className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full">
+                      Add
+                    </button>
+                  </div>
                   
-                  <input 
-                    type="number" 
-                    placeholder="Amount to Withdraw" 
-                    onChange={(e) => setWithdrawAmount(Number(e.target.value))} 
-                  />
-                  <button onClick={() => handleWithdrawFunds(wallet, withdrawAmount)}>Withdraw</button>
+                  <div className="flex flex-col">
+                    <input 
+                      type="number" 
+                      placeholder="Amount to Withdraw" 
+                      onChange={(e) => setWithdrawAmount(Number(e.target.value))} 
+                      className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2"
+                    />
+                    <button onClick={() => handleWithdrawFunds(wallet, withdrawAmount)}
+                      className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full">
+                      Withdraw
+                    </button>
+                  </div>
                 </div>
-              </div>
+              </BackgroundGradient>
             ))
           ) : (
-            <p>No wallets found.</p>
+            <p className="text-white text-center">No wallets found.</p>
           )}
         </div>
-      )}
-      <div className="mt-6">
-        <h2 className="text-lg font-semibold mb-2">Create New Wallet</h2>
-        <form onSubmit={(e) => { e.preventDefault(); handleCreateWallet(newWalletCurrency); }}>
-          <select value={newWalletCurrency} onChange={(e) => setNewWalletCurrency(e.target.value)} required>
-            <option value="">Select Currency</option>
-            <option value="BGN">BGN</option>
-            <option value="EUR">EUR</option>
-            <option value="USD">USD</option>
-            <option value="GBP">GBP</option>
-            <option value="BTC">BTC</option>
-            <option value="ETH">ETH</option>
-          </select>
-          <button type="submit">Create Wallet</button>
-        </form>
       </div>
     </div>
   );
-};
+}
 
 export default WalletsPage;

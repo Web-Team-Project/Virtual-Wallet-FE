@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 interface Category {
   id: string;
@@ -8,7 +8,7 @@ interface Category {
 
 const CategoryPage = () => {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryName, setNewCategoryName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,7 +22,7 @@ const CategoryPage = () => {
     if (session) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:8000/api/v1/categories', {
+        const response = await fetch("http://localhost:8000/api/v1/categories", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -48,7 +48,7 @@ const CategoryPage = () => {
     if (session) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:8000/api/v1/categories', {
+        const response = await fetch("http://localhost:8000/api/v1/categories", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
