@@ -35,7 +35,7 @@ export default function CardPage() {
 
   const createCard = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     const session = getSession();
     if (session && cardInput.number && cardInput.card_holder && cardInput.exp_date && cardInput.cvv) {
       try {
@@ -64,6 +64,82 @@ export default function CardPage() {
   const handleAddCardClick = () => {
     setError(null);
     setIsFieldOpen(!isFieldOpen);
+  };
+
+  const readCard = async (cardId: string) => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch card details: ${response.status}`);
+        }
+        const cardData = await response.json();
+      } catch (error) {
+        console.error("An error occurred while fetching the card details:", error);
+        setError("Failed to fetch card details.");
+      }
+    } else {
+      setError("Session not found.");
+    }
+  };
+
+  const updateCard = async (cardId: string, updatedCardData: CardInput) => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          body: JSON.stringify(updatedCardData),
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to update card: ${response.status}`);
+        }
+        const updatedCard = await response.json();
+      } catch (error) {
+        console.error("An error occurred while updating the card:", error);
+        setError("Failed to update card.");
+      }
+    } else {
+      setError("Session not found.");
+    }
+  };
+
+  const deleteCard = async (cardId: string) => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to delete card: ${response.status}`);
+        }
+        const deletedCard = await response.json();
+      } catch (error) {
+        console.error("An error occurred while deleting the card:", error);
+        setError("Failed to delete card.");
+      }
+    } else {
+      setError("Session not found.");
+    }
   };
 
   return (
@@ -143,6 +219,9 @@ export default function CardPage() {
               Create Card
             </button>
           </form>
+          <button onClick={() => readCard(someCardId)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">View Card</button>
+          <button onClick={() => updateCard(someCardId, someUpdatedCardData)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Update Card</button>
+          <button onClick={() => deleteCard(someCardId)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Delete Card</button>
         </div>
       )}
     </>

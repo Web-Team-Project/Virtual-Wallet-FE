@@ -12,7 +12,6 @@ export default function SigninForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -48,7 +47,8 @@ export default function SigninForm() {
   };
 
   useEffect(() => {
-    const code = searchParams.get("code");
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
     if (code) {
       const fetchUserinfo = async (code: string) => {
         const tokenData = {
@@ -58,20 +58,22 @@ export default function SigninForm() {
           redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
           grant_type: "authorization_code",
         };
-
+  
         const tokenResponse = await axios.post("http://localhost:8000/api/v1/auth/callback", tokenData);
-        const accessToken = tokenResponse.data;
-
+        const accessToken = tokenResponse.data.access_token;
+  
         const headers = { Authorization: `Bearer ${accessToken}` };
         const userinfoResponse = await axios.get("http://localhost:8000/api/v1/protected", { headers });
-
+  
         localStorage.setItem("session", JSON.stringify(userinfoResponse.data));
+        console.log("Session stored in localStorage:", userinfoResponse.data);
+  
         router.push("/home");
       };
-
-      fetchUserinfo(code as string);
+  
+      fetchUserinfo(code);
     }
-  }, [searchParams]);
+  }, []);
 
   return (
     <div className="flex items-center justify-center h-screen">
