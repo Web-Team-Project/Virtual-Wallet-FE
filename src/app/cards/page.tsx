@@ -1,8 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
+import Link from "next/link";
 
 interface CardInput {
   number: string;
@@ -22,15 +22,48 @@ export default function CardPage() {
   });
   const [error, setError] = useState<string | null>(null);
   const [isFieldOpen, setIsFieldOpen] = useState(false);
+  const [cardNumber, setCardNumber] = useState("");
+  const [cards, setCards] = useState<CardInput[]>([]);
+  const [cardData, setCardData] = useState<CardInput | null>(null);
+
+  useEffect(() => {
+    fetchAllCards();
+  }, []);
 
   function getSession() {
     const session = localStorage.getItem("session");
     return session ? JSON.parse(session) : null;
   }
 
+  const fetchAllCards = async () => {
+    const session = getSession();
+    if (session) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/cards`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch cards: ${response.status}`);
+        }
+        const fetchedCards = await response.json();
+        setCards(fetchedCards);
+      } catch (error) {
+        console.error("An error occurred while fetching all cards:", error);
+        setError("Failed to fetch cards.");
+      }
+    } else {
+      setError("Session not found.");
+    }
+  };
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setCardInput(prevState => ({ ...prevState, [name]: value }));
+    setCardInput((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const createCard = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -52,6 +85,7 @@ export default function CardPage() {
           throw new Error(`Failed to create card: ${response.status}`);
         }
         const newCard = await response.json();
+        setCards((prevCards) => [...prevCards, newCard]);
       } catch (error) {
         console.error("An error occurred while creating the card:", error);
         setError("Failed to create card.");
@@ -66,31 +100,19 @@ export default function CardPage() {
     setIsFieldOpen(!isFieldOpen);
   };
 
-  const readCard = async (cardId: string) => {
-    const session = getSession();
-    if (session) {
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to fetch card details: ${response.status}`);
-        }
-        const cardData = await response.json();
-      } catch (error) {
-        console.error("An error occurred while fetching the card details:", error);
-        setError("Failed to fetch card details.");
-      }
+  const readCard = () => {
+    const card = cards.find(card => card.number === cardNumber);
+    if (card) {
+      setCardData(card);
     } else {
-      setError("Session not found.");
+      setError("Card not found.");
     }
   };
 
+  const handleCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCardNumber(event.target.value);
+  };
+  
   const updateCard = async (cardId: string, updatedCardData: CardInput) => {
     const session = getSession();
     if (session) {
@@ -116,7 +138,7 @@ export default function CardPage() {
       setError("Session not found.");
     }
   };
-
+  
   const deleteCard = async (cardId: string) => {
     const session = getSession();
     if (session) {
@@ -132,7 +154,6 @@ export default function CardPage() {
         if (!response.ok) {
           throw new Error(`Failed to delete card: ${response.status}`);
         }
-        const deletedCard = await response.json();
       } catch (error) {
         console.error("An error occurred while deleting the card:", error);
         setError("Failed to delete card.");
@@ -219,9 +240,31 @@ export default function CardPage() {
               Create Card
             </button>
           </form>
-          <button onClick={() => readCard(someCardId)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">View Card</button>
-          <button onClick={() => updateCard(someCardId, someUpdatedCardData)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Update Card</button>
-          <button onClick={() => deleteCard(someCardId)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Delete Card</button>
+        </div>
+      )}
+      <div className="mt-4 flex flex-col items-center">
+        <input
+          type="text"
+          value={cardNumber}
+          onChange={handleCardNumberChange}
+          placeholder="Enter Card Number"
+          className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+        />
+        <button
+          onClick={readCard}
+          className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+        >
+          Read Card
+        </button>
+      </div>
+      {cardData && (
+        <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-2">Card Details</h2>
+          <p><strong>Number:</strong> {cardData.number}</p>
+          <p><strong>Card Holder:</strong> {cardData.card_holder}</p>
+          <p><strong>Expiration Date:</strong> {cardData.exp_date}</p>
+          <p><strong>CVV:</strong> {cardData.cvv}</p>
+          <p><strong>Design:</strong> {cardData.design}</p>
         </div>
       )}
     </>
