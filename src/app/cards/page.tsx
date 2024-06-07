@@ -27,6 +27,15 @@ export default function CardPage() {
   const [cardNumber, setCardNumber] = useState("");
   const [cards, setCards] = useState<CardInput[]>([]);
   const [cardData, setCardData] = useState<CardInput | null>(null);
+  const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [updateCardInput, setUpdateCardInput] = useState<CardInput>({
+    id: "",
+    number: "",
+    card_holder: "",
+    exp_date: "",
+    cvv: "",
+    design: "",
+  });
 
   useEffect(() => {
     fetchAllCards();
@@ -113,6 +122,42 @@ export default function CardPage() {
 
   const handleCardNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCardNumber(event.target.value);
+  };
+
+  const handleUpdateCardClick = (card: CardInput) => {
+    setError(null);
+    setIsUpdateOpen(true);
+    setUpdateCardInput(card);
+  };
+
+  const updateCard = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const session = getSession();
+    if (session && updateCardInput.number && updateCardInput.card_holder && updateCardInput.exp_date && updateCardInput.cvv) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/v1/cards/${updateCardInput.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.id}`,
+          },
+          body: JSON.stringify(updateCardInput),
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to update card: ${response.status}`);
+        }
+        const updatedCard = await response.json();
+        setCards((prevCards) => prevCards.map((card) => card.id === updatedCard.id ? updatedCard : card));
+        setIsUpdateOpen(false);
+      } catch (error) {
+        console.error("An error occurred while updating the card:", error);
+        setError("Failed to update card.");
+      }
+    } else {
+      setError("Session not found or required card information is missing.");
+    }
   };
   
   const deleteCard = async (cardId: string) => {
@@ -246,18 +291,63 @@ export default function CardPage() {
         </button>
       </div>
       {cardData && (
-      <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-2">Card Details</h2>
-        <p><strong>Number:</strong> {cardData.number}</p>
-        <p><strong>Card Holder:</strong> {cardData.card_holder}</p>
-        <p><strong>Expiration Date:</strong> {cardData.exp_date}</p>
-        <p><strong>CVV:</strong> {cardData.cvv}</p>
-        <p><strong>Design:</strong> {cardData.design}</p>
-        <div className="flex mt-4">
-          <button onClick={() => deleteCard(cardData.id)}>Delete</button>
+        <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <h2 className="text-xl font-bold mb-2">Card Details</h2>
+          <p><strong>Number:</strong> {cardData.number}</p>
+          <p><strong>Card Holder:</strong> {cardData.card_holder}</p>
+          <p><strong>Expiration Date:</strong> {cardData.exp_date}</p>
+          <p><strong>CVV:</strong> {cardData.cvv}</p>
+          <p><strong>Design:</strong> {cardData.design}</p>
+          <div className="flex mt-4">
+            <button onClick={() => deleteCard(cardData.id)}>Delete</button>
+            <button onClick={() => handleUpdateCardClick(cardData)}>Update</button>
+          </div>
         </div>
-      </div>
-    )}
+      )}
+      {isUpdateOpen && (
+        <div className="mt-4 flex flex-col items-center">
+          <form onSubmit={updateCard} className="flex flex-col items-center">
+            <input
+              type="text"
+              name="number"
+              value={updateCardInput.number}
+              onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, number: event.target.value }))}
+              placeholder="Card Number"
+              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+            />
+            <input
+              type="text"
+              name="card_holder"
+              value={updateCardInput.card_holder}
+              onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, card_holder: event.target.value }))}
+              placeholder="Card Holder"
+              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+            />
+            <input
+              type="text"
+              name="exp_date"
+              value={updateCardInput.exp_date}
+              onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, exp_date: event.target.value }))}
+              placeholder="Expiration Date"
+              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+            />
+            <input
+              type="text"
+              name="cvv"
+              value={updateCardInput.cvv}
+              onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, cvv: event.target.value }))}
+              placeholder="CVV"
+              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+            />
+            <button
+              type="submit"
+              className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+            >
+              Update Card
+            </button>
+          </form>
+        </div>
+      )}
     </>
   );
 }
