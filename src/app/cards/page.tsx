@@ -5,6 +5,7 @@ import { CardBody, CardContainer, CardItem } from "../components/ui/3d-card";
 import Link from "next/link";
 
 interface CardInput {
+  id: string;
   number: string;
   card_holder: string;
   exp_date: string;
@@ -14,6 +15,7 @@ interface CardInput {
 
 export default function CardPage() {
   const [cardInput, setCardInput] = useState<CardInput>({
+    id: "",
     number: "",
     card_holder: "",
     exp_date: "",
@@ -113,33 +115,9 @@ export default function CardPage() {
     setCardNumber(event.target.value);
   };
   
-  const updateCard = async (cardId: string, updatedCardData: CardInput) => {
-    const session = getSession();
-    if (session) {
-      try {
-        const response = await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          body: JSON.stringify(updatedCardData),
-          credentials: "include",
-        });
-        if (!response.ok) {
-          throw new Error(`Failed to update card: ${response.status}`);
-        }
-        const updatedCard = await response.json();
-      } catch (error) {
-        console.error("An error occurred while updating the card:", error);
-        setError("Failed to update card.");
-      }
-    } else {
-      setError("Session not found.");
-    }
-  };
-  
   const deleteCard = async (cardId: string) => {
+    console.log("Deleting card with ID:", cardId);
+  
     const session = getSession();
     if (session) {
       try {
@@ -152,7 +130,17 @@ export default function CardPage() {
           credentials: "include",
         });
         if (!response.ok) {
-          throw new Error(`Failed to delete card: ${response.status}`);
+          if (response.status === 404) {
+            console.error("Card not found:", cardId);
+            setError("Card not found.");
+          } else {
+            throw new Error(`Failed to delete card: ${response.status}`);
+          }
+        } else {
+          setCards((prevCards) => prevCards.filter((card) => card.id !== cardId));
+          if (cardData && cardData.id === cardId) {
+            setCardData(null);
+          }
         }
       } catch (error) {
         console.error("An error occurred while deleting the card:", error);
@@ -258,15 +246,18 @@ export default function CardPage() {
         </button>
       </div>
       {cardData && (
-        <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-2">Card Details</h2>
-          <p><strong>Number:</strong> {cardData.number}</p>
-          <p><strong>Card Holder:</strong> {cardData.card_holder}</p>
-          <p><strong>Expiration Date:</strong> {cardData.exp_date}</p>
-          <p><strong>CVV:</strong> {cardData.cvv}</p>
-          <p><strong>Design:</strong> {cardData.design}</p>
+      <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+        <h2 className="text-xl font-bold mb-2">Card Details</h2>
+        <p><strong>Number:</strong> {cardData.number}</p>
+        <p><strong>Card Holder:</strong> {cardData.card_holder}</p>
+        <p><strong>Expiration Date:</strong> {cardData.exp_date}</p>
+        <p><strong>CVV:</strong> {cardData.cvv}</p>
+        <p><strong>Design:</strong> {cardData.design}</p>
+        <div className="flex mt-4">
+          <button onClick={() => deleteCard(cardData.id)}>Delete</button>
         </div>
-      )}
+      </div>
+    )}
     </>
   );
 }
