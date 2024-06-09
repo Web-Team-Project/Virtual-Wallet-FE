@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import Image from "next/image";
+import {handleViewProfile, handleAddPhone} from "../components/view_profile_phone";
 
 const avatarOutline = {
   boxShadow: "0 0 0 3px white",
@@ -41,27 +42,24 @@ export default function ProfilePage() {
   }
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      const session = getSession();
-      if (session) {
-        const response = await fetch(`http://localhost:8000/api/v1/users/${session.email}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-        });
-        const data = await response.json();
+    const fetchData = async () => {
+      try {
+        const user = await handleViewProfile();
+        console.log("User data:", user.picture);
         setProfile({
           ...profile,
-          email: data.email,
-          phone: data.phone_number,
+          email: user.email,
+          phone: user.phone_number,
+          avatar: user.picture,
         });
+      } catch (error) {
+        console.log(error);
+        throw new Error("An error occurred while fetching the profile data.");
       }
     };
-    fetchProfile();
+    fetchData();
   }, []);
+
 
   const fetchContacts = async (search: string = "") => {
     const session = getSession();
@@ -132,14 +130,14 @@ export default function ProfilePage() {
             "Authorization": `Bearer ${session.id}`,
           },
         });
-  
+
         if (!userResponse.ok) {
           throw new Error(`HTTP error! Status: ${userResponse.status}`);
         }
-  
+
         const userData = await userResponse.json();
         const userContactId = userData.id;
-  
+
         const contactResponse = await fetch("http://localhost:8000/api/v1/contacts", {
           method: "POST",
           headers: {
@@ -153,17 +151,17 @@ export default function ProfilePage() {
             email: newContactEmail,
           }),
         });
-  
+
         if (!contactResponse.ok) {
           throw new Error(`HTTP error! Status: ${contactResponse.status}`);
         }
-  
+
         const contactData = await contactResponse.json();
         console.log("New contact created:", contactData);
         setNewContactName("");
         setNewContactEmail("");
         fetchContacts();
-  
+
       } catch (error) {
         console.error("Failed to create contact:", error);
       }
@@ -210,36 +208,14 @@ export default function ProfilePage() {
     setNewPhone(e.target.value);
   };
 
-  const handlePhoneSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    const session = getSession();
-    if (!session) {
-      setError("No session found.");
-      return;
-    }
+  const  addPhone = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/v1/users/phone", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.id}`,
-        },
-        credentials: "include",
-        body: JSON.stringify({ phone_number: newPhone }),
-      });
-      if (response.ok) {
-        setProfile({ ...profile, phone: newPhone });
-        setIsAddingPhone(false);
-        setNewPhone("");
-      } else {
-        const errorData = await response.json();
-        setError(errorData.detail || "Failed to add phone number.");
-        console.error("Failed to add phone number:", errorData.detail || "Unknown error");
-      }
+      const result = await handleAddPhone(newPhone);
+      // Handle the result if needed
     } catch (error) {
+      // Handle any errors
       setError("An error occurred while adding the phone number.");
-      console.error("An error occurred", error);
     }
   };
 
@@ -266,7 +242,7 @@ export default function ProfilePage() {
         ) : (
           <>
             {isAddingPhone ? (
-              <form onSubmit={handlePhoneSubmit} className="mt-4 flex flex-col items-center">
+              <form onSubmit={addPhone} className="mt-4 flex flex-col items-center">
                 <input
                   type="text"
                   value={newPhone}

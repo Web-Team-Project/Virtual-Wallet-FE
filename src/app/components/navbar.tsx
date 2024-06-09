@@ -5,6 +5,7 @@ import { useSignOut } from "./sign-out";
 import { cn } from "../utils/cn";
 import { useRouter } from "next/navigation";
 
+
 export default function NavbarFunc() {
   return (
     <div>
@@ -19,39 +20,10 @@ function Navbar({ className }: { className?: string }) {
   const user = "Account";
   const router = useRouter();
 
-  const handleViewProfile = async (event: React.MouseEvent) => {
+  const test = async (event: React.MouseEvent) => {
     event.preventDefault();
-
+    console.log("View Profile clicked");
     try {
-      const session = JSON.parse(localStorage.getItem("session") || "{}");
-
-      if (!session || !session.id) {
-        console.error("No valid session found. Please log in.");
-        throw new Error("No valid session found. Please log in.");
-      }
-
-      console.log("Session retrieved from localStorage:", session);
-
-      const response = await fetch(`http://localhost:8000/api/v1/users/${session.email}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session.id}`,
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          console.error("Unauthorized: Redirecting to login.");
-          router.push("/login");
-        }
-        throw new Error("An error occurred while fetching user data.");
-      }
-
-      const data = await response.json();
-      console.log(data);
-
       router.push("/profile");
     } catch (error) {
       console.error("Error during profile fetch:", error);
@@ -75,7 +47,7 @@ function Navbar({ className }: { className?: string }) {
         <MenuItem setActive={setActive} active={active} item={user}>
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/dashboard">Dashboard</HoveredLink>
-            <HoveredLink href="#" onClick={handleViewProfile}>View Profile</HoveredLink>
+            <HoveredLink href="#" onClick={test}>View Profile</HoveredLink>
             <HoveredLink href="#" onClick={handleSignOut}>Sign out</HoveredLink>
           </div>
         </MenuItem>

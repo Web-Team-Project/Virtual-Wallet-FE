@@ -4,7 +4,7 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { cn } from "../utils/cn";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import axios from "axios";
 
@@ -22,7 +22,7 @@ export default function SigninForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        credentials: "include", // Important: include credentials to allow cookies
         body: JSON.stringify({ email, password }),
       });
 
@@ -33,9 +33,7 @@ export default function SigninForm() {
       const data = await response.json();
       console.log("Login response data:", data);
 
-      localStorage.setItem("session", JSON.stringify(data));
-      console.log("Session stored in localStorage:", data);
-
+      // No need to store session in localStorage, as it is already in cookies
       router.push("/home");
     } catch (error) {
       console.error("Error during login:", error);
@@ -58,19 +56,17 @@ export default function SigninForm() {
           redirect_uri: process.env.NEXT_PUBLIC_REDIRECT_URI,
           grant_type: "authorization_code",
         };
-  
+
         const tokenResponse = await axios.post("http://localhost:8000/api/v1/auth/callback", tokenData);
         const accessToken = tokenResponse.data.access_token;
-  
+
         const headers = { Authorization: `Bearer ${accessToken}` };
         const userinfoResponse = await axios.get("http://localhost:8000/api/v1/protected", { headers });
-  
-        localStorage.setItem("session", JSON.stringify(userinfoResponse.data));
-        console.log("Session stored in localStorage:", userinfoResponse.data);
-  
+
+        // No need to store session in localStorage, as it is already in cookies
         router.push("/home");
       };
-  
+
       fetchUserinfo(code);
     }
   }, []);
@@ -85,20 +81,20 @@ export default function SigninForm() {
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input 
-              id="email" 
+            <Input
+              id="email"
               placeholder="user@example.com"
-              type="email" 
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input 
-              id="password" 
-              placeholder="••••••••" 
-              type="password" 
+            <Input
+              id="password"
+              placeholder="••••••••"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
