@@ -54,7 +54,8 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                 <td className="border px-4 py-2">{new Date(transaction.created_at).toLocaleString()}</td>
                                 <td className="border px-4 py-2">
                                     <button onClick={() => onAction(transaction.id, 'approve')} className="bg-green-500 text-white px-2 py-1 rounded mr-2">Approve</button>
-                                    <button onClick={() => onAction(transaction.id, 'reject')} className="bg-red-500 text-white px-2 py-1 rounded">Reject</button>
+                                    <button onClick={() => onAction(transaction.id, 'reject')} className="bg-red-500 text-white px-4 py-1 rounded">Reject</button>
+                                    <button onClick={() => onAction(transaction.id, 'confirm')} className="bg-blue-500 text-white px-2.5 py-1 rounded">Confirm</button>
                                 </td>
                             </tr>
                         ))}
