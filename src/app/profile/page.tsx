@@ -212,9 +212,7 @@ export default function ProfilePage() {
     event.preventDefault();
     try {
       const result = await handleAddPhone(newPhone);
-      // Handle the result if needed
     } catch (error) {
-      // Handle any errors
       setError("An error occurred while adding the phone number.");
     }
   };

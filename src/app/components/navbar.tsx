@@ -20,9 +20,8 @@ function Navbar({ className }: { className?: string }) {
   const user = "Account";
   const router = useRouter();
 
-  const view_profile = async (event: React.MouseEvent) => {
+  const viewProfile = async (event: React.MouseEvent) => {
     event.preventDefault();
-    console.log("View Profile clicked");
     try {
       router.push("/profile");
     } catch (error) {
@@ -40,15 +39,20 @@ function Navbar({ className }: { className?: string }) {
       <Menu setActive={setActive}>
         <MenuItem setActive={setActive} active={active} item="About">
           <div className="flex flex-col space-y-4 text-sm">
-            <HoveredLink href="/about">Info 1</HoveredLink>
-            <HoveredLink href="/contact">Info 2</HoveredLink>
+            <HoveredLink href="/about">About Us</HoveredLink>
+            <HoveredLink href="http://localhost:8000/swagger">API</HoveredLink>
           </div>
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item={user}>
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/dashboard">Dashboard</HoveredLink>
-            <HoveredLink href="#" onClick={view_profile}>View Profile</HoveredLink>
+            <HoveredLink href="#" onClick={viewProfile}>View Profile</HoveredLink>
             <HoveredLink href="#" onClick={handleSignOut}>Sign out</HoveredLink>
+          </div>
+        </MenuItem>
+        <MenuItem setActive={setActive} active={active} item="Admin Panel">
+          <div className="flex flex-col space-y-4 text-sm">
+            <HoveredLink href="/admin">Admin Panel</HoveredLink>
           </div>
         </MenuItem>
       </Menu>
