@@ -50,7 +50,7 @@ export default function ProfilePage() {
           ...profile,
           email: user.email,
           phone: user.phone_number,
-          avatar: user.picture || "/default-profile.png", // da izberem default profile pic
+          avatar: user.picture || "/default-profile.png",
         });
       } catch (error) {
         console.log(error);

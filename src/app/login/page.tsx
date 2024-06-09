@@ -22,7 +22,7 @@ export default function SigninForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Important: include credentials to allow cookies
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -33,7 +33,6 @@ export default function SigninForm() {
       const data = await response.json();
       console.log("Login response data:", data);
 
-      // No need to store session in localStorage, as it is already in cookies
       router.push("/home");
     } catch (error) {
       console.error("Error during login:", error);
