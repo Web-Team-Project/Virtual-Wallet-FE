@@ -50,7 +50,7 @@ export default function ProfilePage() {
           ...profile,
           email: user.email,
           phone: user.phone_number,
-          avatar: user.picture,
+          avatar: user.picture || "/default-profile.png", // da izberem default profile pic
         });
       } catch (error) {
         console.log(error);
@@ -208,7 +208,7 @@ export default function ProfilePage() {
     setNewPhone(e.target.value);
   };
 
-  const  addPhone = async (event: { preventDefault: () => void; }) => {
+  const addPhone = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     try {
       const result = await handleAddPhone(newPhone);

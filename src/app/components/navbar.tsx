@@ -20,7 +20,7 @@ function Navbar({ className }: { className?: string }) {
   const user = "Account";
   const router = useRouter();
 
-  const test = async (event: React.MouseEvent) => {
+  const view_profile = async (event: React.MouseEvent) => {
     event.preventDefault();
     console.log("View Profile clicked");
     try {
@@ -47,7 +47,7 @@ function Navbar({ className }: { className?: string }) {
         <MenuItem setActive={setActive} active={active} item={user}>
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/dashboard">Dashboard</HoveredLink>
-            <HoveredLink href="#" onClick={test}>View Profile</HoveredLink>
+            <HoveredLink href="#" onClick={view_profile}>View Profile</HoveredLink>
             <HoveredLink href="#" onClick={handleSignOut}>Sign out</HoveredLink>
           </div>
         </MenuItem>
