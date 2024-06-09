@@ -223,7 +223,7 @@ export default function CardPage() {
               translateZ={20}
               as="button"
               onClick={handleAddCardClick}
-              className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold"
+              className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
             >
               Add card
             </CardItem>
@@ -239,32 +239,32 @@ export default function CardPage() {
               name="number"
               value={cardInput.number}
               onChange={handleInputChange}
-              placeholder="Card Number"
               className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              placeholder="Card Number"
             />
             <input
               type="text"
               name="card_holder"
               value={cardInput.card_holder}
               onChange={handleInputChange}
-              placeholder="Card Holder"
               className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              placeholder="Card Holder"
             />
             <input
               type="text"
               name="exp_date"
               value={cardInput.exp_date}
               onChange={handleInputChange}
-              placeholder="Expiration Date"
               className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              placeholder="Expiration Date"
             />
             <input
               type="text"
               name="cvv"
               value={cardInput.cvv}
               onChange={handleInputChange}
-              placeholder="CVV"
               className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              placeholder="CVV"
             />
             <button
               type="submit"
@@ -299,8 +299,8 @@ export default function CardPage() {
           <p><strong>CVV:</strong> {cardData.cvv}</p>
           <p><strong>Design:</strong> {cardData.design}</p>
           <div className="flex mt-4">
-            <button onClick={() => deleteCard(cardData.id)}>Delete</button>
-            <button onClick={() => handleUpdateCardClick(cardData)}>Update</button>
+            <button onClick={() => deleteCard(cardData.id)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Delete</button>
+            <button onClick={() => handleUpdateCardClick(cardData)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Update</button>
           </div>
         </div>
       )}

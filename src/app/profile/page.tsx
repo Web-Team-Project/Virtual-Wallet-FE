@@ -208,7 +208,7 @@ export default function ProfilePage() {
     setNewPhone(e.target.value);
   };
 
-  const  addPhone = async (event: { preventDefault: () => void; }) => {
+  const addPhone = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     try {
       const result = await handleAddPhone(newPhone);
