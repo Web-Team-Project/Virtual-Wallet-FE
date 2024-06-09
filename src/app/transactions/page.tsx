@@ -83,7 +83,7 @@ export default function DashboardPage() {
         }
 
         try {
-            const response = await fetch("http://localhost:8000/api/v1/transaction", {
+            const response = await fetch("http://localhost:8000/api/v1/transactions", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export default function DashboardPage() {
         }
     
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/transaction/${id}/${action}`, {
+            const response = await fetch(`http://localhost:8000/api/v1/transactions/${id}/${action}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
