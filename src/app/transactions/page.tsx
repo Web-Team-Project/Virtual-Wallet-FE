@@ -14,7 +14,7 @@ interface Transaction {
     card_id: string;
     recipient_id: string;
     currency: string;
-    sender_id: string; // Assuming sender_id to differentiate between the creator and the approver
+    sender_id: string;
 }
 
 export default function DashboardPage() {
@@ -45,7 +45,7 @@ export default function DashboardPage() {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`, // Ensure correct session token usage
+                    "Authorization": `Bearer ${session.token}`,
                 },
                 credentials: "include",
             });
@@ -56,12 +56,12 @@ export default function DashboardPage() {
             }
 
             const data = await response.json();
-            console.log("Fetched data:", data); // Log the response
+            console.log("Fetched data:", data);
 
             if (Array.isArray(data)) {
-                setTransactions(data); // Directly an array of transactions
+                setTransactions(data);
             } else if (data && Array.isArray(data.transactions)) {
-                setTransactions(data.transactions); // Transactions wrapped in an object
+                setTransactions(data.transactions);
             } else {
                 throw new Error("Fetched data is not an array");
             }
@@ -87,7 +87,7 @@ export default function DashboardPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`, // Ensure correct session token usage
+                    "Authorization": `Bearer ${session.token}`,
                 },
                 credentials: "include",
                 body: JSON.stringify({
@@ -105,7 +105,7 @@ export default function DashboardPage() {
                 throw new Error(`Failed to create transaction: ${errorText}`);
             }
 
-            fetchTransactions(); // Refresh the list after creating a transaction
+            fetchTransactions();
         } catch (error: any) {
             setError(`Failed to create transaction: ${error.message}`);
         }
@@ -123,10 +123,10 @@ export default function DashboardPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`, // Ensure correct session token usage
+                    "Authorization": `Bearer ${session.token}`,
                 },
                 credentials: "include",
-                body: JSON.stringify({ current_user_id: session.user_id }), // Include current_user_id in the payload
+                body: JSON.stringify({ current_user_id: session.user_id }),
             });
     
             if (!response.ok) {
@@ -141,14 +141,14 @@ export default function DashboardPage() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-            <h1 className="text-2xl font-bold mb-4">Transaction Dashboard</h1>
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4">
+            <h1 className="text-2xl font-bold text-white mb-4">Transaction Dashboard</h1>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <TransactionForm onCreate={createTransaction} />
             <TransactionList 
                 transactions={transactions} 
                 onAction={handleTransactionAction} 
-                currentUserId={getSession()?.user_id} // Pass the current user's ID to TransactionList
+                currentUserId={getSession()?.user_id}
             />
         </div>
     );
