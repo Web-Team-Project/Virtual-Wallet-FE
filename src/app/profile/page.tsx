@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import Image from "next/image";
-import {handleViewProfile, handleAddPhone} from "../components/view_profile_phone";
+import {handleViewProfile, handleAddPhone, handleVerifyPhone} from "../components/view_profile_phone";
 
 const avatarOutline = {
   boxShadow: "0 0 0 3px white",
@@ -12,6 +12,7 @@ interface Profile {
   avatar: string;
   email: string;
   phone?: string;
+  phone_verified?: boolean;
 }
 
 const profileData: Profile = {
@@ -24,6 +25,8 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile>(profileData);
   const [isAddingPhone, setIsAddingPhone] = useState(false);
   const [newPhone, setNewPhone] = useState("");
+  const [isVerifyingPhone, setIsVerifyingPhone] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
   const [contacts, setContacts] = useState([]);
   const [showContacts, setShowContacts] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -32,7 +35,6 @@ export default function ProfilePage() {
   const [searchResults, setSearchResults] = useState([]);
   const [newContactName, setNewContactName] = useState("");
   const [newContactEmail, setNewContactEmail] = useState("");
-
   function getSession() {
     const session = localStorage.getItem("session");
     if (session) {
@@ -217,6 +219,25 @@ export default function ProfilePage() {
     }
   };
 
+
+   const handleVerifyClick = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
+    try {
+      const result = await handleVerifyPhone(verificationCode);
+      if (result.message === "Phone number verified successfully") {
+        setProfile((prevProfile) => ({
+          ...prevProfile,
+          phone_verified: true,
+        }));
+        setIsVerifyingPhone(false);
+      } else {
+        setError("Invalid verification code.");
+      }
+    } catch (error) {
+      setError("An error occurred while verifying the phone number.");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black">
       <BackgroundGradient className="flex flex-col items-center justify-center rounded-[22px] max-w-lg p-4 sm:p-10 bg-white dark:bg-zinc-900">
@@ -234,9 +255,42 @@ export default function ProfilePage() {
           {profile.email}
         </p>
         {profile.phone ? (
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
-            {profile.phone}
-          </p>
+          <>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
+              {profile.phone}
+            </p>
+            {!profile.phone_verified && (
+              <>
+                {isVerifyingPhone ? (
+                  <form onSubmit={handleVerifyClick} className="mt-4 flex flex-col items-center">
+                    <input
+                      type="text"
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value)}
+                      className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+                      placeholder="Enter verification code"
+                    />
+                    <button
+                      type="submit"
+                      className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+                    >
+                      Verify
+                    </button>
+                    {error && (
+                      <p className="text-red-500 mt-2">{error}</p>
+                    )}
+                  </form>
+                ) : (
+                  <button
+                    className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+                    onClick={() => setIsVerifyingPhone(true)}
+                  >
+                    Verify phone
+                  </button>
+                )}
+              </>
+            )}
+          </>
         ) : (
           <>
             {isAddingPhone ? (
@@ -303,7 +357,7 @@ export default function ProfilePage() {
                       onClick={() => deleteContact(contact.contact_id)}
                     >
                       <span className="absolute inset-0 overflow-hidden rounded-full">
-                      <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,0,0,0.6)_25%,rgba(255,0,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+                        <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,0,0,0.6)_25%,rgba(255,0,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
                       </span>
                       <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
                         <span>Delete Contact</span>
@@ -322,12 +376,19 @@ export default function ProfilePage() {
                   onChange={(e) => setNewContactEmail(e.target.value)}
                   className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
                 />
+                <input
+                  type="text"
+                  placeholder="Contact name"
+                  value={newContactName}
+                  onChange={(e) => setNewContactName(e.target.value)}
+                  className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
+                />
                 <button
                   type="submit"
                   className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[200px] h-[35px]"
                 >
                   <span className="absolute inset-0 overflow-hidden rounded-full">
-                  <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(0,0,255,0.6)_25%,rgba(0,0,255,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+                    <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(0,0,255,0.6)_25%,rgba(0,0,255,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
                   </span>
                   <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
                     <span>Create Contact</span>
