@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import TransactionList from "../components/transaction_list";
 import TransactionForm from "../components/transaction_form";
@@ -20,18 +19,29 @@ interface Transaction {
 export default function DashboardPage() {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
     useEffect(() => {
+        checkAdminStatus();
         fetchTransactions();
     }, []);
 
     function getSession() {
         const session = localStorage.getItem("session");
         if (session) {
-            return JSON.parse(session);
+            const parsedSession = JSON.parse(session);
+            console.log("Parsed session:", parsedSession); // Debugging
+            return parsedSession;
         }
         return null;
     }
+
+    const checkAdminStatus = () => {
+        const session = getSession();
+        if (session) {
+            setIsAdmin(session.is_admin || false);
+        }
+    };
 
     const fetchTransactions = async () => {
         const session = getSession();
@@ -119,7 +129,7 @@ export default function DashboardPage() {
         }
     
         try {
-            const method = action === "confirm" ? "PUT" : "POST";
+            const method = action === "confirm" || action === "deny" ? "PUT" : "POST";
             const response = await fetch(`http://localhost:8000/api/v1/transactions/${id}/${action}`, {
                 method,
                 headers: {
@@ -149,7 +159,7 @@ export default function DashboardPage() {
             <TransactionList 
                 transactions={transactions} 
                 onAction={handleTransactionAction} 
-                currentUserId={getSession()?.user_id}
+                isAdmin={isAdmin} // Pass isAdmin as prop to TransactionList
             />
         </div>
     );
