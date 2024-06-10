@@ -28,6 +28,7 @@ export default function CardPage() {
   const [cards, setCards] = useState<CardInput[]>([]);
   const [cardData, setCardData] = useState<CardInput | null>(null);
   const [isUpdateOpen, setIsUpdateOpen] = useState(false);
+  const [isReadFieldOpen, setIsReadFieldOpen] = useState(false);
   const [updateCardInput, setUpdateCardInput] = useState<CardInput>({
     id: "",
     number: "",
@@ -97,6 +98,7 @@ export default function CardPage() {
         }
         const newCard = await response.json();
         setCards((prevCards) => [...prevCards, newCard]);
+        setIsFieldOpen(false);
       } catch (error) {
         console.error("An error occurred while creating the card:", error);
         setError("Failed to create card.");
@@ -159,10 +161,10 @@ export default function CardPage() {
       setError("Session not found or required card information is missing.");
     }
   };
-  
+
   const deleteCard = async (cardId: string) => {
     console.log("Deleting card with ID:", cardId);
-  
+
     const session = getSession();
     if (session) {
       try {
@@ -219,52 +221,62 @@ export default function CardPage() {
             >
               Try now →
             </CardItem>
-            <CardItem
-              translateZ={20}
-              as="button"
-              onClick={handleAddCardClick}
-              className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
-            >
-              Add card
-            </CardItem>
+            <div>
+              <CardItem
+                translateZ={20}
+                as="button"
+                onClick={handleAddCardClick}
+                className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800 mr-2"
+              >
+                Add card
+              </CardItem>
+              <CardItem
+                translateZ={20}
+                as="button"
+                onClick={() => setIsReadFieldOpen(!isReadFieldOpen)}
+                className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+              >
+                Check Card Info
+              </CardItem>
+            </div>
           </div>
           {error && <p className="text-red-500 mt-2">{error}</p>}
         </CardBody>
       </CardContainer>
       {isFieldOpen && (
-        <div className="mt-4 flex flex-col items-center">
-          <form onSubmit={createCard} className="flex flex-col items-center">
+        <div className="rounded-full mt-4 flex flex-col items-center">
+          <form onSubmit={createCard} className="rounded-full flex flex-col items-center">
             <input
               type="text"
               name="number"
               value={cardInput.number}
               onChange={handleInputChange}
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
               placeholder="Card Number"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <input
               type="text"
               name="card_holder"
               value={cardInput.card_holder}
               onChange={handleInputChange}
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
               placeholder="Card Holder"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <input
               type="text"
               name="exp_date"
               value={cardInput.exp_date}
               onChange={handleInputChange}
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
               placeholder="Expiration Date"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <input
               type="text"
               name="cvv"
               value={cardInput.cvv}
               onChange={handleInputChange}
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
               placeholder="CVV"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <button
               type="submit"
@@ -275,45 +287,48 @@ export default function CardPage() {
           </form>
         </div>
       )}
-      <div className="mt-4 flex flex-col items-center">
-        <input
-          type="text"
-          value={cardNumber}
-          onChange={handleCardNumberChange}
-          placeholder="Enter Card Number"
-          className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
-        />
-        <button
-          onClick={readCard}
-          className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
-        >
-          Read Card
-        </button>
-      </div>
+      {isReadFieldOpen && (
+        <div className="mt-4 flex flex-col items-center">
+          <input
+            type="text"
+            value={cardNumber}
+            onChange={handleCardNumberChange}
+            placeholder="Enter Card Number"
+            className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+          />
+          <button
+            onClick={readCard}
+            className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+          >
+            Read Card
+          </button>
+        </div>
+      )}
       {cardData && (
-        <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-2">Card Details</h2>
-          <p><strong>Number:</strong> {cardData.number}</p>
-          <p><strong>Card Holder:</strong> {cardData.card_holder}</p>
-          <p><strong>Expiration Date:</strong> {cardData.exp_date}</p>
-          <p><strong>CVV:</strong> {cardData.cvv}</p>
-          <p><strong>Design:</strong> {cardData.design}</p>
-          <div className="flex mt-4">
-            <button onClick={() => deleteCard(cardData.id)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Delete</button>
-            <button onClick={() => handleUpdateCardClick(cardData)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">Update</button>
+        <div className="flex justify-center items-center bg-black">
+          <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+            <h2 className="text-xl font-bold mb-2 text-center">Card Details</h2>
+            <p className="text-center"><strong>Number:</strong> {cardData.number}</p>
+            <p className="text-center"><strong>Card Holder:</strong> {cardData.card_holder}</p>
+            <p className="text-center"><strong>Expiration Date:</strong> {cardData.exp_date}</p>
+            <p className="text-center"><strong>CVV:</strong> {cardData.cvv}</p>
+            <div className="flex justify-center mt-4">
+              <button onClick={() => deleteCard(cardData.id)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800 mx-2">Delete</button>
+              <button onClick={() => handleUpdateCardClick(cardData)} className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800 mx-2">Update</button>
+            </div>
           </div>
         </div>
       )}
       {isUpdateOpen && (
-        <div className="mt-4 flex flex-col items-center">
-          <form onSubmit={updateCard} className="flex flex-col items-center">
+        <div className="rounded-full mt-4 flex flex-col items-center">
+          <form onSubmit={updateCard} className="rounded-full flex flex-col items-center">
             <input
               type="text"
               name="number"
               value={updateCardInput.number}
               onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, number: event.target.value }))}
               placeholder="Card Number"
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <input
               type="text"
@@ -321,7 +336,7 @@ export default function CardPage() {
               value={updateCardInput.card_holder}
               onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, card_holder: event.target.value }))}
               placeholder="Card Holder"
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <input
               type="text"
@@ -329,7 +344,7 @@ export default function CardPage() {
               value={updateCardInput.exp_date}
               onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, exp_date: event.target.value }))}
               placeholder="Expiration Date"
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <input
               type="text"
@@ -337,7 +352,7 @@ export default function CardPage() {
               value={updateCardInput.cvv}
               onChange={(event) => setUpdateCardInput((prevState) => ({ ...prevState, cvv: event.target.value }))}
               placeholder="CVV"
-              className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
+              className="px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700"
             />
             <button
               type="submit"
