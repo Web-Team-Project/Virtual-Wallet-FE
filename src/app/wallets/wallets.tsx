@@ -1,7 +1,7 @@
 "use server"
 import { cookies } from "next/headers";
 
-const handleCreateWallet = async (phone: string) => {
+const handleCreateWallet = async (currency: string) => {
     const cookiesStore = cookies()
     const user = cookiesStore.get("user")
 
@@ -11,15 +11,14 @@ const handleCreateWallet = async (phone: string) => {
     }
     else {
         try{
-
             const response = await fetch("http://localhost:8000/api/v1/wallets", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Cookie": `user=${user.value}` // Send the cookie in the request headers
+                    "Cookie": `user=${user.value}`
                 },
                     credentials: "include",
-                    body: JSON.stringify({ currency: phone }),
+                    body: JSON.stringify({ currency }),
             });
             const data = await response.json();
             return data;
@@ -40,12 +39,11 @@ const handleCreateWallet = async (phone: string) => {
     }
     else {
         try{
-
             const response = await fetch("http://localhost:8000/api/v1/wallets/balance", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Cookie": `user=${user.value}` // Send the cookie in the request headers
+                    "Cookie": `user=${user.value}`
                 },
                     credentials: "include",
             });
@@ -58,4 +56,4 @@ const handleCreateWallet = async (phone: string) => {
     }
   };
 
-export {handleCreateWallet, fetchWallets};
+export { handleCreateWallet, fetchWallets };

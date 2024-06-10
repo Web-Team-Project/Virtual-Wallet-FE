@@ -21,7 +21,6 @@ interface Wallet {
     return session ? JSON.parse(session) : null;
   }
   
-
   const createWallet = async (currency: string) => {
     try
     {
@@ -34,9 +33,6 @@ interface Wallet {
       setError("Failed to create wallet.");
     }
   };
-
-  
-
 
   const handleAddFunds = async (wallet: Wallet, amount: number) => {
     const session = getSession();
@@ -86,18 +82,17 @@ interface Wallet {
     }
   };
   
-
   useEffect(() => {
     fetchingWallets();
     console.log(wallets);
   }, []);
 
-
   const fetchingWallets = async () => {
     try {
-      const data = await fetchWallets();
-      setWallets(data);
-      console.log(data);
+      const dataArray = await fetchWallets();
+      const walletsData = dataArray.map(([balance, currency]: [number, string]) => ({ balance, currency }));
+      setWallets(walletsData);
+      console.log('Updated wallets state:', walletsData);
     } catch (error) {
       console.error("An error occurred while fetching wallets:", error);
       setError("Failed to fetch wallets.");
