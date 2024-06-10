@@ -3,9 +3,9 @@ import React from 'react';
 interface Transaction {
     id: string;
     amount: number;
-    category: string;
+    category_id: string;
     status: string;
-    created_at: string;
+    timestamp: string;
     card_id: string;
     recipient_id: string;
     currency: string;
@@ -31,13 +31,13 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                     <p className="text-gray-400">No transactions found.</p>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full border-collapse text-black bg-white rounded-lg shadow-lg overflow-hidden">
-                            <thead className="bg-gray-200">
+                        <table className="w-full border-collapse text-white bg-gray-700 rounded-lg shadow-lg overflow-hidden">
+                            <thead className="bg-gray-800">
                                 <tr>
                                     <th className="border px-4 py-2">ID</th>
                                     <th className="border px-4 py-2">Amount</th>
                                     <th className="border px-4 py-2">Currency</th>
-                                    <th className="border px-4 py-2">Category</th>
+                                    <th className="border px-4 py-2">Category ID</th>
                                     <th className="border px-4 py-2">Card ID</th>
                                     <th className="border px-4 py-2">Recipient ID</th>
                                     <th className="border px-4 py-2">Status</th>
@@ -49,16 +49,16 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                 {transactions.map((transaction) => (
                                     <tr 
                                         key={transaction.id} 
-                                        className="hover:bg-gray-300 transition-all hover:shadow-[0_0_10px_2px_rgba(0,0,255,0.5)]"
+                                        className="hover:bg-blue-500 transition-all hover:shadow-[0_0_10px_2px_rgba(0,0,255,0.5)]"
                                     >
                                         <td className="border px-4 py-2">{transaction.id}</td>
                                         <td className="border px-4 py-2">{transaction.amount}</td>
                                         <td className="border px-4 py-2">{transaction.currency}</td>
-                                        <td className="border px-4 py-2">{transaction.category}</td>
+                                        <td className="border px-4 py-2">{transaction.category_id}</td>
                                         <td className="border px-4 py-2">{transaction.card_id}</td>
                                         <td className="border px-4 py-2">{transaction.recipient_id}</td>
                                         <td className="border px-4 py-2">{transaction.status}</td>
-                                        <td className="border px-4 py-2">{new Date(transaction.created_at).toLocaleString()}</td>
+                                        <td className="border px-4 py-2">{new Date(transaction.timestamp).toLocaleString()}</td>
                                         <td className="border px-4 py-2">
                                             <button 
                                                 onClick={() => onAction(transaction.id, 'approve')} 

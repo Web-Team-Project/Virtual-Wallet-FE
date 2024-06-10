@@ -34,13 +34,12 @@ const handleAddPhone = async (phone: any) => {
     if (user === undefined){
         console.log("User not found")
         return
-    }
-    else {
+    } else {
         const response = await fetch("http://localhost:8000/api/v1/users/phone", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Cookie": `user=${user.value}` // Send the cookie in the request headers
+                "Cookie": `user=${user.value}`
             },
             credentials: "include",
             body: JSON.stringify({ phone_number: phone }),
@@ -49,4 +48,27 @@ const handleAddPhone = async (phone: any) => {
         return data;
     }
 };
-  export { handleViewProfile, handleAddPhone };
+
+const handleVerifyPhone = async (code: any) => {
+    const cookiesStore = cookies()
+    const user = cookiesStore.get("user")
+
+    if (user === undefined){
+        console.log("User not found")
+        return
+    } else {
+        const response = await fetch("http://localhost:8000/api/v1/verify_phone", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Cookie": `user=${user.value}`
+            },
+            credentials: "include",
+            body: JSON.stringify({ code }),
+        });
+        const data = await response.json();
+        return data;
+    }
+};
+
+  export { handleViewProfile, handleAddPhone, handleVerifyPhone};
