@@ -119,8 +119,9 @@ export default function DashboardPage() {
         }
     
         try {
+            const method = action === "confirm" ? "PUT" : "POST";
             const response = await fetch(`http://localhost:8000/api/v1/transactions/${id}/${action}`, {
-                method: "POST",
+                method,
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${session.token}`,
