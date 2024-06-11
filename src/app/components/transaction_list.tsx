@@ -1,5 +1,5 @@
 import React from 'react';
-import { BackgroundGradient } from '../components/ui/background-gradient'; // Importing BackgroundGradient component
+import { BackgroundGradient } from '../components/ui/background-gradient';
 
 interface Transaction {
     id: string;
@@ -47,7 +47,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
     return (
         <BackgroundGradient>
             <div className="flex flex-col items-center justify-center min-h-screen">
-                <div className="w-full rounded-3xl max-w-6xl mx-auto p-4 bg-gray-800 rounded shadow-md"> {/* Add rounded-3xl class */}
+                <div className="w-full rounded-3xl max-w-6xl mx-auto p-4 bg-gray-800 rounded shadow-md">
                     <div className="mb-6">
                         <h2 className="text-xl font-bold mb-2 text-white">All Transactions</h2>
                     </div>

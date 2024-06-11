@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import TransactionList from "../components/transaction_list";
 import TransactionForm from "../components/transaction_form";
 import { createTransactionServer, fetchTransactionsServer } from "../server_calls";
-import { BackgroundGradient } from "../components/ui/background-gradient";
 
 export default function DashboardPage() {
     const [transactions, setTransactions] = useState<Transaction[]>([]);

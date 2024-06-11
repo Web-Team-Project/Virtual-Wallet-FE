@@ -42,10 +42,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
   const handleFetchCards = async () => {
     try {
       const data = await fetchCardsServer();
-      console.log("Raw fetched cards data:", data); // Log raw data for debugging
+      console.log("Raw fetched cards data:", data);
 
       if (Array.isArray(data)) {
-        console.log("Valid cards data format:", data); // Log if data is valid
+        console.log("Valid cards data format:", data);
         setCards(data.map((card: any) => ({
           exp_date: card.exp_date,
           design: card.design,
@@ -63,27 +63,27 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
           card_holder: card.card_holder,
           cvv: card.cvv,
           user_id: card.user_id,
-        }))); // Log the transformed data
+        })));
       } else {
-        console.error("Invalid cards data format", data); // Log invalid data format
+        console.error("Invalid cards data format", data);
       }
     } catch (error) {
-      console.error("Error fetching cards:", error); // Log any error
+      console.error("Error fetching cards:", error);
     }
   };
 
   const handleFetchCategories = async () => {
     try {
       const data = await fetchCategoriesServer();
-      console.log("Fetched categories data:", data); // Debugging log
+      console.log("Fetched categories data:", data);
       if (data && Array.isArray(data.categories)) {
         setCategories(data.categories);
       } else {
-        console.error("Invalid categories data format", data); // Debugging log for invalid data
+        console.error("Invalid categories data format", data);
       }
     } catch (error) {
       console.error("Error fetching categories:", error);
-      setCategories([]); // Set empty array on error
+      setCategories([]);
     }
   };
 
