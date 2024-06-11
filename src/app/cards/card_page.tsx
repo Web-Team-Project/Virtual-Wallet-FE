@@ -174,7 +174,7 @@ const CardsPage: React.FC = () => {
             <span className="relative z-10">{showCreateForm ? 'Hide Form' : 'Create New Card'}</span>
           </button>
         </div>
-         {showCreateForm && (
+        {showCreateForm && (
           <BackgroundGradient className="mt-4 p-4 bg-white dark:bg-zinc-900 rounded-[22px] shadow-lg flex flex-col items-center">
             <h2 className="text-xl font-bold mb-4">Create New Card</h2>
             <div className="w-full max-w-xs">
@@ -220,6 +220,56 @@ const CardsPage: React.FC = () => {
               >
                 <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(0,255,0,0.6)_25%,rgba(0,255,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
                 <span className="relative z-10">Create Card</span>
+              </button>
+            </div>
+          </BackgroundGradient>
+        )}
+        {editCard && (
+          <BackgroundGradient className="mt-4 p-4 bg-white dark:bg-zinc-900 rounded-[22px] shadow-lg flex flex-col items-center">
+            <h2 className="text-xl font-bold mb-4">Edit Card</h2>
+            <div className="w-full max-w-xs">
+              <input
+                type="text"
+                placeholder="Card Number"
+                value={editCard.number}
+                onChange={(e) => setEditCard({ ...editCard, number: e.target.value })}
+                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2 w-full"
+              />
+              <input
+                type="text"
+                placeholder="Card Holder"
+                value={editCard.card_holder}
+                onChange={(e) => setEditCard({ ...editCard, card_holder: e.target.value })}
+                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2 w-full"
+              />
+              <input
+                type="text"
+                placeholder="Expiry Date"
+                value={editCard.exp_date}
+                onChange={(e) => setEditCard({ ...editCard, exp_date: e.target.value })}
+                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2 w-full"
+              />
+              <input
+                type="text"
+                placeholder="CVV"
+                value={editCard.cvv}
+                onChange={(e) => setEditCard({ ...editCard, cvv: e.target.value })}
+                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2 w-full"
+              />
+              <select
+                value={editCard.design}
+                onChange={(e) => setEditCard({ ...editCard, design: e.target.value })}
+                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2 w-full"
+              >
+                <option value="credit">Credit</option>
+                <option value="debit">Debit</option>
+              </select>
+              <button
+                onClick={() => handleUpdateCard(editCard.id)}
+                className="mt-2 bg-black text-white px-4 py-2 rounded-full w-full relative overflow-hidden"
+              >
+                <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(0,255,0,0.6)_25%,rgba(0,255,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+                <span className="relative z-10">Update Card</span>
               </button>
             </div>
           </BackgroundGradient>
