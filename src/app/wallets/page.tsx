@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import {handleCreateWallet, fetchWallets } from "./wallets";
+import React from "react";
 
 interface Wallet {
     balance: number;

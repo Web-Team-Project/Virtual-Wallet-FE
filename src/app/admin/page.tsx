@@ -18,16 +18,18 @@ export default function AdminPage() {
     const [error, setError] = useState<string | null>(null);
     const [search, setSearch] = useState<string>('');
     const [skip, setSkip] = useState<number>(0);
-    const [limit, setLimit] = useState<number>(100);
+    const [limit, setLimit] = useState<number>(5);
+    const [totalUsers, setTotalUsers] = useState<number>(0);
 
     useEffect(() => {
         fetchUsers();
-    }, [search]);
+    }, [search, skip, limit]);
 
     const fetchUsers = async () => {
         try {
             const data = await fetchUsersServer(search, skip, limit);
-            setUsers(data);
+            setUsers(data.users);
+            setTotalUsers(data.total);
         } catch (error: any) {
             setError(error.message);
         }
@@ -41,7 +43,7 @@ export default function AdminPage() {
             setError(error.message);
         }
     };
-    
+
     const deactivateUser = async (userId: string) => {
         try {
             await deactivateUserServer(userId);
@@ -50,7 +52,7 @@ export default function AdminPage() {
             setError(error.message);
         }
     };
-    
+
     const blockUser = async (userId: string) => {
         try {
             await blockUserServer(userId);
@@ -59,7 +61,7 @@ export default function AdminPage() {
             setError(error.message);
         }
     };
-    
+
     const unblockUser = async (userId: string) => {
         try {
             await unblockUserServer(userId);
@@ -67,6 +69,14 @@ export default function AdminPage() {
         } catch (error: any) {
             setError(error.message);
         }
+    };
+
+    const handleNextPage = () => {
+        setSkip(skip + limit);
+    };
+
+    const handlePrevPage = () => {
+        setSkip(Math.max(0, skip - limit));
     };
 
     return (
@@ -77,16 +87,30 @@ export default function AdminPage() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by email or phone number"
-                className="mb-4 p-2 rounded"
+                placeholder="Search by email or phone"
+                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
             />
-            <UserTable 
-                users={users} 
-                onUpdateRole={updateUserRole} 
-                onDeactivate={deactivateUser} 
+            <UserTable
+                users={users}
+                onUpdateRole={updateUserRole}
+                onDeactivate={deactivateUser}
                 onBlock={blockUser}
                 onUnblock={unblockUser}
             />
+            <div className="flex justify-between mt-4">
+                <button
+                    onClick={handlePrevPage}
+                    disabled={skip === 0}
+                    className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 mr-2 w-20">
+                    Previous
+                </button>
+                <button
+                    onClick={handleNextPage}
+                    disabled={skip + limit >= totalUsers}
+                    className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 ml-2 w-20">
+                    Next
+                </button>
+            </div>
         </div>
     );
 }

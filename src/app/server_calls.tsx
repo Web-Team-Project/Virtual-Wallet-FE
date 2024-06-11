@@ -152,7 +152,6 @@ const handleViewProfile = async () => {
     }
 };
 
-
 const handleAddPhone = async (phone: any) => {
     const user = checkCookies();
     if (user === undefined){
@@ -225,7 +224,7 @@ const deactivateUserServer = async (userId: string) => {
         console.log("User not found");
         return;
     }
-    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/deactivate`, user, {});
+    const data = await createDeleteFetch(`http://localhost:8000/api/v1/users/${userId}/deactivate`, user);
     return data;
 };
 

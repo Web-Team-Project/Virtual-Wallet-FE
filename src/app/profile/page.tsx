@@ -35,6 +35,7 @@ export default function ProfilePage() {
   const [searchResults, setSearchResults] = useState([]);
   const [newContactName, setNewContactName] = useState("");
   const [newContactEmail, setNewContactEmail] = useState("");
+  
   function getSession() {
     const session = localStorage.getItem("session");
     if (session) {
