@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import TransactionList from "../components/transaction_list";
 import TransactionForm from "../components/transaction_form";
 import { createTransactionServer, fetchTransactionsServer } from "../server_calls";
-
+import { BackgroundGradient } from "../components/ui/background-gradient";
 
 export default function DashboardPage() {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -19,7 +19,6 @@ export default function DashboardPage() {
         const session = localStorage.getItem("session");
         if (session) {
             const parsedSession = JSON.parse(session);
-            console.log("Parsed session:", parsedSession);
             return parsedSession;
         }
         return null;
@@ -34,8 +33,10 @@ export default function DashboardPage() {
 
     const fetchTransactions = async () => {
         try {
-            
             const data = await fetchTransactionsServer();
+            if (data) {
+                setTransactions(data.transactions);
+            }
         } catch (error: any) {
             setError(error.message);
         }
@@ -72,10 +73,6 @@ export default function DashboardPage() {
     };
 
     return (
-        <div>
-            <button>
-                <a onClick={fetchTransactions}>Test</a>
-            </button>
         <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4">
             <h1 className="text-2xl font-bold text-white mb-4">Transaction Dashboard</h1>
             {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -83,9 +80,8 @@ export default function DashboardPage() {
             <TransactionList 
                 transactions={transactions} 
                 onAction={handleTransactionAction} 
-                isAdmin={true}
+                isAdmin={isAdmin} 
             />
-        </div>
         </div>
     );
 }
