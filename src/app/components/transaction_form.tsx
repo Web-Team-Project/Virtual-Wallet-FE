@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { use, useEffect, useState } from 'react';
+import { fetchCategoriesServer } from '../server_calls';
 
 interface TransactionFormProps {
   onCreate: (transaction: { amount: number; category: string; card_id: string; recipient_id: string; currency: string }) => void;
@@ -7,20 +7,28 @@ interface TransactionFormProps {
 
 const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
   const [amount, setAmount] = useState<number>(0);
-  const [category, setCategory] = useState<string>(uuidv4());
-  const [cardId, setCardId] = useState<string>(uuidv4());
-  const [recipientId, setRecipientId] = useState<string>(uuidv4());
+  const [category, setCategory] = useState<string>("");
+  const [cardNum, setCardNum] = useState<string>("");
+  const [recipient, setRecipient] = useState<string>("");
   const [currency, setCurrency] = useState<string>('BGN');
+  const [categories, setCategories] = useState<string[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onCreate({ amount, category, card_id: cardId, recipient_id: recipientId, currency });
+    onCreate({ amount, category, card_id: cardNum, recipient_id: recipient, currency });
     setAmount(0);
-    setCategory(uuidv4());
-    setCardId(uuidv4());
-    setRecipientId(uuidv4());
     setCurrency('BGN');
   };
+
+  const handleFetchCategories = async () => {
+    const data = await fetchCategoriesServer();
+    console.log("Fetched categories:", data);
+    setCategories(data.categories);
+  }
+  useEffect(() => {
+    handleFetchCategories()
+  }, []);
+
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center p-4 bg-gray-800 shadow-md rounded-md">
@@ -33,6 +41,14 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
         className="mb-2 p-2 border rounded text-black"
         required
       />
+      <select>
+        <option value="">Select a category</option>
+        {categories.map((cat) => (
+          <option key={cat.name} value={cat.name}>
+            {cat.name}
+          </option>
+        ))}
+      </select>
       <input
         type="text"
         value={category}
@@ -43,16 +59,16 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
       />
       <input
         type="text"
-        value={cardId}
-        onChange={(e) => setCardId(e.target.value)}
+        value={cardNum}
+        onChange={(e) => setCardNum(e.target.value)}
         placeholder="Card ID UUID"
         className="mb-2 p-2 border rounded text-black"
         required
       />
       <input
         type="text"
-        value={recipientId}
-        onChange={(e) => setRecipientId(e.target.value)}
+        value={recipient}
+        onChange={(e) => setRecipient(e.target.value)}
         placeholder="Recipient ID UUID"
         className="mb-2 p-2 border rounded text-black"
         required

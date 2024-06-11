@@ -1,25 +1,17 @@
 import React from 'react';
 
-interface Transaction {
-    id: string;
-    amount: number;
-    category_id: string;
-    status: string;
-    timestamp: string;
-    card_id: string;
-    recipient_id: string;
-    currency: string;
-}
-
 interface TransactionListProps {
     transactions: Transaction[];
     onAction: (id: string, action: "approve" | "reject" | "confirm" | "deny") => void;
+    isAdmin: boolean;
 }
 
-const TransactionList: React.FC<TransactionListProps> = ({ transactions, onAction }) => {
+const TransactionList: React.FC<TransactionListProps> = ({ transactions, onAction, isAdmin }) => {
     if (!Array.isArray(transactions)) {
         return <p>Invalid transaction data.</p>;
     }
+
+    console.log("isAdmin in TransactionList:", isAdmin); // Debugging
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
@@ -54,11 +46,11 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                         <td className="border px-4 py-2">{transaction.id}</td>
                                         <td className="border px-4 py-2">{transaction.amount}</td>
                                         <td className="border px-4 py-2">{transaction.currency}</td>
-                                        <td className="border px-4 py-2">{transaction.category_id}</td>
+                                        <td className="border px-4 py-2">{transaction.category}</td>
                                         <td className="border px-4 py-2">{transaction.card_id}</td>
                                         <td className="border px-4 py-2">{transaction.recipient_id}</td>
                                         <td className="border px-4 py-2">{transaction.status}</td>
-                                        <td className="border px-4 py-2">{new Date(transaction.timestamp).toLocaleString()}</td>
+                                        <td className="border px-4 py-2">{new Date(transaction.amount).toLocaleString()}</td>
                                         <td className="border px-4 py-2">
                                             <button 
                                                 onClick={() => onAction(transaction.id, 'approve')} 
@@ -78,6 +70,14 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                             >
                                                 Confirm
                                             </button>
+                                            {isAdmin && (
+                                                <button 
+                                                    onClick={() => onAction(transaction.id, 'deny')} 
+                                                    className="bg-yellow-500 text-white px-5 py-1 rounded"
+                                                >
+                                                    Deny
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}

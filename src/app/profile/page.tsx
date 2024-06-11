@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import Image from "next/image";
-import {handleViewProfile, handleAddPhone, handleVerifyPhone} from "../components/view_profile_phone";
+import { handleAddPhone, handleVerifyPhone, handleViewProfile } from "../server_calls";
 
 const avatarOutline = {
   boxShadow: "0 0 0 3px white",
@@ -224,7 +224,7 @@ export default function ProfilePage() {
     event.preventDefault();
     try {
       const result = await handleVerifyPhone(verificationCode);
-      if (result.message === "Phone number verified successfully") {
+      if (result.message === "Phone number verified successfully.") {
         setProfile((prevProfile) => ({
           ...prevProfile,
           phone_verified: true,
@@ -374,13 +374,6 @@ export default function ProfilePage() {
                   placeholder="Contact email"
                   value={newContactEmail}
                   onChange={(e) => setNewContactEmail(e.target.value)}
-                  className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
-                />
-                <input
-                  type="text"
-                  placeholder="Contact name"
-                  value={newContactName}
-                  onChange={(e) => setNewContactName(e.target.value)}
                   className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
                 />
                 <button
