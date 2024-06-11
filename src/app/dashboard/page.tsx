@@ -1,12 +1,13 @@
 "use client";
 
+import React from "react";
 import { HoverEffect } from "../components/ui/card-hover-effect";
 import {projects} from "./projects";
 import {FaArrowLeft} from "react-icons/fa";
 
 export default function Dashboard() {
   const handleGoBack = () => {
-    window.history.back(); // Fallback mechanism to handle navigation if useRouter is not available
+    window.history.back();
   };
 
   return (
