@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import TransactionList from "../components/transaction_list";
 import TransactionForm from "../components/transaction_form";
-import { validate as uuidValidate } from 'uuid';
 import { createTransactionServer, fetchTransactionsServer } from "../server_calls";
 
 
@@ -20,7 +19,7 @@ export default function DashboardPage() {
         const session = localStorage.getItem("session");
         if (session) {
             const parsedSession = JSON.parse(session);
-            console.log("Parsed session:", parsedSession); // Debugging
+            console.log("Parsed session:", parsedSession);
             return parsedSession;
         }
         return null;
@@ -74,7 +73,6 @@ export default function DashboardPage() {
 
     return (
         <div>
-            
             <button>
                 <a onClick={fetchTransactions}>Test</a>
             </button>
@@ -85,7 +83,7 @@ export default function DashboardPage() {
             <TransactionList 
                 transactions={transactions} 
                 onAction={handleTransactionAction} 
-                isAdmin={true} // Pass isAdmin as prop to TransactionList
+                isAdmin={true}
             />
         </div>
         </div>
