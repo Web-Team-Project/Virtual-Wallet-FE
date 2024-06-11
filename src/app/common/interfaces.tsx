@@ -4,8 +4,8 @@ interface Transaction {
     category: string;
     status: string;
     created_at: string;
-    card_id: string;
-    recipient_id: string;
+    card_number: string;
+    recipient_email: string;
     currency: string;
     sender_id: string;
 }

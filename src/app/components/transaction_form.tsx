@@ -1,8 +1,23 @@
-import React, { use, useEffect, useState } from 'react';
-import { fetchCategoriesServer } from '../server_calls';
+import React, { useEffect, useState } from 'react';
+import { fetchCardsServer, fetchCategoriesServer } from '../server_calls';
+import { BackgroundGradient } from '../components/ui/background-gradient';
 
 interface TransactionFormProps {
-  onCreate: (transaction: { amount: number; category: string; card_id: string; recipient_id: string; currency: string }) => void;
+  onCreate: (transaction: { amount: number; category: string; card_number: string; recipient_email: string; currency: string }) => void;
+}
+
+interface Category {
+  name: string;
+}
+
+interface Card {
+  exp_date: string;
+  design: string;
+  number: string;
+  id: string;
+  card_holder: string;
+  cvv: string;
+  user_id: string;
 }
 
 const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
@@ -11,85 +26,136 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
   const [cardNum, setCardNum] = useState<string>("");
   const [recipient, setRecipient] = useState<string>("");
   const [currency, setCurrency] = useState<string>('BGN');
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [cards, setCards] = useState<Card[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onCreate({ amount, category, card_id: cardNum, recipient_id: recipient, currency });
+    onCreate({ amount, category, card_number: cardNum, recipient_email: recipient, currency });
     setAmount(0);
+    setCategory("");
+    setCardNum("");
+    setRecipient("");
     setCurrency('BGN');
   };
 
+  const handleFetchCards = async () => {
+    try {
+      const data = await fetchCardsServer();
+      console.log("Raw fetched cards data:", data); // Log raw data for debugging
+
+      if (Array.isArray(data)) {
+        console.log("Valid cards data format:", data); // Log if data is valid
+        setCards(data.map((card: any) => ({
+          exp_date: card.exp_date,
+          design: card.design,
+          number: card.number,
+          id: card.id,
+          card_holder: card.card_holder,
+          cvv: card.cvv,
+          user_id: card.user_id,
+        })));
+        console.log("Cards state after setting:", data.map((card: any) => ({
+          exp_date: card.exp_date,
+          design: card.design,
+          number: card.number,
+          id: card.id,
+          card_holder: card.card_holder,
+          cvv: card.cvv,
+          user_id: card.user_id,
+        }))); // Log the transformed data
+      } else {
+        console.error("Invalid cards data format", data); // Log invalid data format
+      }
+    } catch (error) {
+      console.error("Error fetching cards:", error); // Log any error
+    }
+  };
+
   const handleFetchCategories = async () => {
-    const data = await fetchCategoriesServer();
-    console.log("Fetched categories:", data);
-    setCategories(data.categories);
-  }
+    try {
+      const data = await fetchCategoriesServer();
+      console.log("Fetched categories data:", data); // Debugging log
+      if (data && Array.isArray(data.categories)) {
+        setCategories(data.categories);
+      } else {
+        console.error("Invalid categories data format", data); // Debugging log for invalid data
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setCategories([]); // Set empty array on error
+    }
+  };
+
   useEffect(() => {
-    handleFetchCategories()
+    handleFetchCategories();
+    handleFetchCards();
   }, []);
 
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col items-center p-4 bg-gray-800 shadow-md rounded-md">
-      <h2 className="text-xl font-bold text-white mb-4">Create New Transaction</h2>
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(Number(e.target.value))}
-        placeholder="Amount"
-        className="mb-2 p-2 border rounded text-black"
-        required
-      />
-      <select>
-        <option value="">Select a category</option>
-        {categories.map((cat) => (
-          <option key={cat.name} value={cat.name}>
-            {cat.name}
-          </option>
-        ))}
-      </select>
-      <input
-        type="text"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        placeholder="Category UUID"
-        className="mb-2 p-2 border rounded text-black"
-        required
-      />
-      <input
-        type="text"
-        value={cardNum}
-        onChange={(e) => setCardNum(e.target.value)}
-        placeholder="Card ID UUID"
-        className="mb-2 p-2 border rounded text-black"
-        required
-      />
-      <input
-        type="text"
-        value={recipient}
-        onChange={(e) => setRecipient(e.target.value)}
-        placeholder="Recipient ID UUID"
-        className="mb-2 p-2 border rounded text-black"
-        required
-      />
-      <select
-        value={currency}
-        onChange={(e) => setCurrency(e.target.value)}
-        className="mb-2 p-2 border rounded text-black"
-        required
-      >
-        <option value="BTC">BTC</option>
-        <option value="ETH">ETH</option>
-        <option value="BGN">BGN</option>
-        <option value="EUR">EUR</option>
-        <option value="GBP">GBP</option>
-        <option value="USD">USD</option>
-      </select>
-      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-        Create
-      </button>
-    </form>
+    <BackgroundGradient>
+      <form onSubmit={handleSubmit} className="flex flex-col rounded-3xl items-center p-4 bg-gray-800 shadow-md">
+        <h2 className="text-xl font-bold text-white mb-4">Create New Transaction</h2>
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(Number(e.target.value))}
+          placeholder="Amount"
+          className="mb-2 p-2 border rounded-none text-black"
+          required
+        />
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="w-full border mb-2 p-2 border rounded-none text-black"
+          required
+        >
+          <option value="">Select a category</option>
+          {categories.map((cat) => (
+            <option key={cat.name} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
+        </select>
+        <select
+          value={cardNum}
+          onChange={(e) => setCardNum(e.target.value)}
+          className="w-full border mb-2 p-2 border rounded-none text-black"
+          required
+        >
+          <option value="">Select a card</option>
+          {cards.map((card) => (
+            <option key={card.id} value={card.number}>
+              {card.number}
+            </option>
+          ))}
+        </select>
+        <input
+          type="text"
+          value={recipient}
+          onChange={(e) => setRecipient(e.target.value)}
+          placeholder="Recipient e-mail"
+          className="w-full border mb-2 p-2 border rounded-none text-black"
+          required
+        />
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+          className="mb-2 p-2 border rounded-none text-black"
+          required
+        >
+          <option value="BTC">BTC</option>
+          <option value="ETH">ETH</option>
+          <option value="BGN">BGN</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+          <option value="USD">USD</option>
+        </select>
+        <button type="submit" className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
+          Create
+        </button>
+      </form>
+    </BackgroundGradient>
   );
 };
 
