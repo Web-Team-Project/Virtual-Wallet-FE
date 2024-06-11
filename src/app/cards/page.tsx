@@ -1,5 +1,4 @@
 "use client";
-
 import React from 'react';
 import CardsPage from "@/app/cards/card_page";
 

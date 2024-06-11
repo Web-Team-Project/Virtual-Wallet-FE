@@ -10,6 +10,8 @@ import { IconBrandGoogle } from "@tabler/icons-react";
 export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [hashed_password, setPassword] = useState("");
+  const [given_name, setGivenName] = useState("");
+  const [family_name, setFamilyName] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -22,7 +24,7 @@ export default function SignupForm() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ email, hashed_password }),
+        body: JSON.stringify({ given_name, family_name, email, hashed_password }),
       });
 
       if (!response.ok) {
@@ -51,6 +53,28 @@ export default function SignupForm() {
 
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
+            <Label htmlFor="givenName">First Name</Label>
+            <Input 
+              id="givenName" 
+              placeholder="Enter your first name"
+              type="text" 
+              value={given_name}
+              onChange={(e) => setGivenName(e.target.value)}
+            />
+          </LabelInputContainer>
+
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="familyName">Family Name</Label>
+            <Input 
+              id="familyName" 
+              placeholder="Enter your family name" 
+              type="text" 
+              value={family_name}
+              onChange={(e) => setFamilyName(e.target.value)}
+            />
+          </LabelInputContainer>
+
+          <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
             <Input 
               id="email" 
@@ -60,6 +84,7 @@ export default function SignupForm() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </LabelInputContainer>
+
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
             <Input 
@@ -97,10 +122,8 @@ export default function SignupForm() {
         <div className="mt-4 text-neutral">
           <p className="text-neutral-600 dark:text-neutral-300">
             Already have an account?{" "}
-            <Link href="/login">
-              <span className="text-neutral-700 dark:text-cyan-500 font-medium">
-                Sign in
-              </span>
+            <Link href="/login" passHref>
+              <span className="text-neutral-700 dark:text-cyan-500 font-medium cursor-pointer">Sign in</span>
             </Link>
           </p>
         </div>
@@ -129,5 +152,26 @@ const LabelInputContainer = ({
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
       {children}
     </div>
+  );
+};
+
+const SocialButton = ({
+  icon,
+  label,
+}: {
+  icon: JSX.Element;
+  label: string;
+}) => {
+  return (
+    <button
+      className="relative group/btn flex space-x-2 items-center justify-start px-4 w-full text-black rounded-md h-10 font-medium shadow-input bg-gray-50 dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_var(--neutral-800)]"
+      type="button"
+    >
+      {icon}
+      <span className="text-neutral-700 dark:text-neutral-300 text-sm">
+        {label}
+      </span>
+      <BottomGradient />
+    </button>
   );
 };
