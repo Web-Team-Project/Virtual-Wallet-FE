@@ -32,33 +32,29 @@ const UserTable: React.FC<UserTableProps> = ({ users, onUpdateRole, onDeactivate
                     <table className="w-full border-collapse text-white bg-gray-700 rounded-lg shadow-lg overflow-hidden">
                         <thead className="bg-gray-800">
                             <tr>
-                                <th className="border px-4 py-2">ID</th>
                                 <th className="border px-4 py-2">Email</th>
                                 <th className="border px-4 py-2">Phone Number</th>
-                                <th className="border px-4 py-2">Is Admin</th>
-                                <th className="border px-4 py-2">Is Active</th>
-                                <th className="border px-4 py-2">Is Blocked</th>
-                                <th className="border px-4 py-2">Created At</th>
+                                <th className="border px-4 py-2">Is admin</th>
+                                <th className="border px-4 py-2">Is active</th>
+                                <th className="border px-4 py-2">Is blocked</th>
                                 <th className="border px-4 py-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {users.map((user) => (
-                                <tr key={user.id} className="hover:bg-blue-500 transition-all hover:shadow-[0_0_10px_2px_rgba(0,0,255,0.5)]">
-                                    <td className="border px-4 py-2">{user.id}</td>
+                                <tr key={user.id} className="hover:bg-cyan-500 transition-all hover:shadow-[0_0_10px_2px_rgba(0,0,255,0.5)]">
                                     <td className="border px-4 py-2">{user.email}</td>
                                     <td className="border px-4 py-2">{user.phone_number}</td>
                                     <td className="border px-4 py-2">{user.is_admin ? 'Yes' : 'No'}</td>
                                     <td className="border px-4 py-2">{user.is_active ? 'Yes' : 'No'}</td>
                                     <td className="border px-4 py-2">{user.is_blocked ? 'Yes' : 'No'}</td>
-                                    <td className="border px-4 py-2">{new Date(user.created_at).toLocaleString()}</td>
                                     <td className="border px-4 py-2">
                                         {!user.is_admin && (
                                             <button
                                                 onClick={() => onUpdateRole(user.id)}
                                                 className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
                                             >
-                                                Make Admin
+                                                Promote
                                             </button>
                                         )}
                                         {user.is_active && (

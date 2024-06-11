@@ -1,7 +1,7 @@
 "use client";
-
 import React, { useState, useEffect } from 'react';
-import UserTable from '../components/UserTable';
+import UserTable from '../components/user-table';
+import { blockUserServer, deactivateUserServer, fetchUsersServer, unblockUserServer, updateUserRoleServer } from '../server_calls';
 
 interface User {
     id: string;
@@ -22,154 +22,50 @@ export default function AdminPage() {
 
     useEffect(() => {
         fetchUsers();
-    }, [search, skip, limit]);
-
-    function getSession() {
-        const session = localStorage.getItem("session");
-        if (session) {
-            return JSON.parse(session);
-        }
-        return null;
-    }
+    }, [search]);
 
     const fetchUsers = async () => {
-        const session = getSession();
-        if (!session) {
-            setError("No session found. Please log in.");
-            return;
-        }
-
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/search/users?search=${search}&skip=${skip}&limit=${limit}`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`,
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to fetch users: ${errorText}`);
-            }
-
-            const data = await response.json();
+            const data = await fetchUsersServer(search, skip, limit);
             setUsers(data);
         } catch (error: any) {
             setError(error.message);
         }
     };
 
-    const updateUserRole = async (userId: string) => {
-        const session = getSession();
-        if (!session) {
-            setError("No session found. Please log in.");
-            return;
-        }
-
+    const updateUserRole = async (userId: string, newRole: string) => {
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/users/${userId}/role`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`,
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to update user role: ${errorText}`);
-            }
-
-            fetchUsers();
+            await updateUserRoleServer(userId, newRole);
+            await fetchUsers();
         } catch (error: any) {
-            setError(`Failed to update user role: ${error.message}`);
+            setError(error.message);
         }
     };
-
+    
     const deactivateUser = async (userId: string) => {
-        const session = getSession();
-        if (!session) {
-            setError("No session found. Please log in.");
-            return;
-        }
-
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/users/${userId}/deactivate`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`,
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to deactivate user: ${errorText}`);
-            }
-
-            fetchUsers();
+            await deactivateUserServer(userId);
+            await fetchUsers();
         } catch (error: any) {
-            setError(`Failed to deactivate user: ${error.message}`);
+            setError(error.message);
         }
     };
-
+    
     const blockUser = async (userId: string) => {
-        const session = getSession();
-        if (!session) {
-            setError("No session found. Please log in.");
-            return;
-        }
-
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/users/${userId}/block`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`,
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to block user: ${errorText}`);
-            }
-
-            fetchUsers();
+            await blockUserServer(userId);
+            await fetchUsers();
         } catch (error: any) {
-            setError(`Failed to block user: ${error.message}`);
+            setError(error.message);
         }
     };
-
+    
     const unblockUser = async (userId: string) => {
-        const session = getSession();
-        if (!session) {
-            setError("No session found. Please log in.");
-            return;
-        }
-
         try {
-            const response = await fetch(`http://localhost:8000/api/v1/users/${userId}/unblock`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${session.token}`,
-                },
-                credentials: "include",
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`Failed to unblock user: ${errorText}`);
-            }
-
-            fetchUsers();
+            await unblockUserServer(userId);
+            await fetchUsers();
         } catch (error: any) {
-            setError(`Failed to unblock user: ${error.message}`);
+            setError(error.message);
         }
     };
 

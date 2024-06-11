@@ -45,6 +45,41 @@ const createPostFetch = async (url: string, user: RequestCookie, body: any) => {
     return data;
 }
 
+const createPutFetch = async (url: string, user: RequestCookie, body: any) => {
+    const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Cookie": `user=${user.value}`
+        },
+        credentials: "include",
+        body: JSON.stringify(body),
+    });
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to fetch: ${errorText}`);
+    }
+    const data = await response.json();
+    return data;
+}
+
+const createDeleteFetch = async (url: string, user: RequestCookie) => {
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Cookie": `user=${user.value}`
+        },
+        credentials: "include",
+    });
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Failed to fetch: ${errorText}`);
+    }
+    const data = await response.json();
+    return data;
+}
+
 const fetchCategoriesServer = async () => {
     const user = checkCookies();
     if (user === undefined){
@@ -174,6 +209,57 @@ const createTransactionServer = async (transaction: { amount: number; category: 
     });
 };
 
-  export { handleViewProfile, handleAddPhone, handleVerifyPhone, 
-    fetchTransactionsServer,createCategoryServer, fetchCategoriesServer, deleteCategoryServer,
-    createTransactionServer};
+const updateUserRoleServer = async (userId: string, newRole: string) => {
+    const user = checkCookies();
+    if (user === undefined) {
+        console.log("User not found");
+        return;
+    }
+    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/role`, user, { role: newRole });
+    return data;
+};
+
+const deactivateUserServer = async (userId: string) => {
+    const user = checkCookies();
+    if (user === undefined) {
+        console.log("User not found");
+        return;
+    }
+    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/deactivate`, user, {});
+    return data;
+};
+
+const blockUserServer = async (userId: string) => {
+    const user = checkCookies();
+    if (user === undefined) {
+        console.log("User not found");
+        return;
+    }
+    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/block`, user, {});
+    return data;
+};
+
+const unblockUserServer = async (userId: string) => {
+    const user = checkCookies();
+    if (user === undefined) {
+        console.log("User not found");
+        return;
+    }
+    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/unblock`, user, {});
+    return data;
+};
+
+const fetchUsersServer = async (search: string, skip: number, limit: number) => {
+    const userCookie = checkCookies();
+    if (!userCookie) {
+        throw new Error("User not found. Please log in.");
+    }
+
+    const url = `http://localhost:8000/api/v1/search/users?search=${encodeURIComponent(search)}&skip=${skip}&limit=${limit}`;
+    const data = await createGetFetch(url, userCookie);
+    return data;
+};
+
+  export { handleViewProfile, handleAddPhone, handleVerifyPhone,
+    fetchTransactionsServer,createCategoryServer, fetchCategoriesServer, deleteCategoryServer, createTransactionServer, 
+    updateUserRoleServer, deactivateUserServer, blockUserServer, unblockUserServer, fetchUsersServer};
