@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import UserTable from '../components/user-table';
 import { blockUserServer, deactivateUserServer, fetchUsersServer, unblockUserServer, updateUserRoleServer } from '../server_calls';
+import { motion } from 'framer-motion';
 
 interface User {
     id: string;
@@ -81,7 +82,18 @@ export default function AdminPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-black p-4">
-            <h1 className="text-2xl font-bold text-white mb-4">Admin Panel</h1>
+          <motion.h1
+            initial={{ textShadow: '0px 0px 8px rgba(255, 255, 255, 0)' }}
+            animate={{ textShadow: '0px 0px 8px rgba(255, 255, 255, 0.8)' }}
+            transition={{
+              duration: 0.8,
+              ease: "easeInOut",
+              yoyo: Infinity
+            }}
+            className="text-2xl font-bold text-white mb-4"
+          >
+            Admin Panel
+          </motion.h1>
             {error && <p className="text-red-500 mb-4">{error}</p>}
             <input
                 type="text"
