@@ -26,7 +26,7 @@ const UserTable: React.FC<UserTableProps> = ({ users, onUpdateRole, onDeactivate
     return (
         <div className="w-full max-w-7xl mx-auto p-4">
             {users.length === 0 ? (
-                <p className="text-gray-400">No users found.</p>
+                <p className="text-gray-400 text-center">No users found.</p>
             ) : (
                 <div className="overflow-x-auto">
                     <table className="w-full border-collapse text-white bg-gray-700 rounded-lg shadow-lg overflow-hidden">

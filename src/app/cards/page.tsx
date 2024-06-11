@@ -204,7 +204,7 @@ export default function CardPage() {
         <CardBody className="bg-gray-50 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1] dark:bg-black dark:border-white/[0.2] border-black/[0.1] w-auto sm:w-[30rem] h-auto rounded-xl p-6 border">
           <CardItem translateZ="100" className="w-full">
             <Image
-              src="https://t4.ftcdn.net/jpg/00/54/94/01/360_F_54940108_iLuekZcanZt4y6ak5vIpfsROxxfk7cFg.jpg"
+              src="https://i.ibb.co/tCc6sqJ/360-F-54940108-i-Luek-Zcan-Zt4y6ak5v-Ipfs-ROxxfk7c-Fg-removebg-preview.png"
               height="1000"
               width="1000"
               className="h-60 w-full object-cover rounded-xl group-hover/card:shadow-xl"
