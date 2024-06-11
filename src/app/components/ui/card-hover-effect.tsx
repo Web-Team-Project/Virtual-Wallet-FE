@@ -12,6 +12,7 @@ export const HoverEffect = ({
     title: string;
     description: string;
     link: string;
+    icon: React.ReactNode;
   }[];
   className?: string;
 }) => {
@@ -20,7 +21,7 @@ export const HoverEffect = ({
   return (
     <div
       className={cn(
-        "grid grid-cols-2 md:grid-cols-2  lg:grid-cols-2  py-20",
+        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6",
         className
       )}
     >
@@ -28,14 +29,14 @@ export const HoverEffect = ({
         <Link
           href={item?.link}
           key={item?.link}
-          className="relative group  block p-2 h-full w-full"
+          className="relative group block p-4 h-full w-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
           <AnimatePresence>
             {hoveredIndex === idx && (
               <motion.span
-                className="absolute inset-0 h-full w-full bg-neutral-200 dark:bg-slate-800/[0.8] block  rounded-3xl"
+                className="absolute inset-0 h-full w-full bg-gray-800 block rounded-3xl"
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{
@@ -49,9 +50,14 @@ export const HoverEffect = ({
               />
             )}
           </AnimatePresence>
-          <Card>
-            <CardTitle>{item.title}</CardTitle>
-            <CardDescription>{item.description}</CardDescription>
+          <Card className="hover:border-white hover:text-white transition-colors duration-300">
+            <div className="flex items-center space-x-4">
+              {item.icon}
+              <div>
+                <CardTitle>{item.title}</CardTitle>
+                <CardDescription>{item.description}</CardDescription>
+              </div>
+            </div>
           </Card>
         </Link>
       ))}
@@ -69,7 +75,7 @@ export const Card = ({
   return (
     <div
       className={cn(
-        "rounded-2xl h-full w-full p-4 overflow-hidden bg-black border border-transparent dark:border-white/[0.2] group-hover:border-slate-700 relative z-20",
+        "rounded-3xl h-full w-full p-6 overflow-hidden bg-black text-white border border-gray-600 relative z-20 transition-all duration-300",
         className
       )}
     >
@@ -79,6 +85,7 @@ export const Card = ({
     </div>
   );
 };
+
 export const CardTitle = ({
   className,
   children,
@@ -87,11 +94,12 @@ export const CardTitle = ({
   children: React.ReactNode;
 }) => {
   return (
-    <h4 className={cn("text-zinc-100 font-bold tracking-wide mt-4", className)}>
+    <h4 className={cn("text-white font-bold tracking-wide mt-4", className)}>
       {children}
     </h4>
   );
 };
+
 export const CardDescription = ({
   className,
   children,
@@ -102,7 +110,7 @@ export const CardDescription = ({
   return (
     <p
       className={cn(
-        "mt-8 text-zinc-400 tracking-wide leading-relaxed text-sm",
+        "mt-2 text-gray-400 tracking-wide leading-relaxed text-sm",
         className
       )}
     >
