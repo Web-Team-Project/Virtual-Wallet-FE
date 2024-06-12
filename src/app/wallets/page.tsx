@@ -39,7 +39,7 @@ const WalletsPage = () => {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/wallets/${session.user_id}/add`, {
+        const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/wallets/${session.user_id}/add`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const WalletsPage = () => {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch("http://localhost:8000/api/v1/wallets/withdraw", {
+        const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/wallets/withdraw", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -103,7 +103,7 @@ const WalletsPage = () => {
   };
 
   const handleGoBack = () => {
-    window.history.back(); // Fallback mechanism to handle navigation if useRouter is not available
+    window.history.back();
   };
 
   return (

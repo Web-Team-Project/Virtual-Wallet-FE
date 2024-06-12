@@ -42,7 +42,7 @@ function Navbar({ className }: { className?: string }) {
             <HoveredLink href="/about">About Us</HoveredLink>
             <HoveredLink href="/features">Features</HoveredLink>
             <HoveredLink href="/tabs">Tabs</HoveredLink>
-            <HoveredLink href="http://localhost:8000/swagger">API</HoveredLink>
+            <HoveredLink href="https://virtual-wallet-87bx.onrender.com/swagger">API</HoveredLink>
           </div>
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item={user}>

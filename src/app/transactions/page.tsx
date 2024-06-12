@@ -52,7 +52,7 @@ export default function DashboardPage() {
 
         try {
             const method = action === "confirm" || action === "deny" ? "PUT" : "POST";
-            const response = await fetch(`http://localhost:8000/api/v1/transactions/${id}/${action}`, {
+            const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/transactions/${id}/${action}`, {
                 method,
                 headers: {
                     "Content-Type": "application/json",

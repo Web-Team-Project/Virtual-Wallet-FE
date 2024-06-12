@@ -27,8 +27,8 @@ const CreditCard: React.FC<CreditCardProps> = ({ number, name, expiry, cvc, desi
       const centerY = rect.height / 2;
       const deltaX = x - centerX;
       const deltaY = y - centerY;
-      const rotateX = (deltaY / centerY) * -10; // Adjust the tilt intensity
-      const rotateY = (deltaX / centerX) * 10; // Adjust the tilt intensity
+      const rotateX = (deltaY / centerY) * -10;
+      const rotateY = (deltaX / centerX) * 10;
 
       card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     };
@@ -46,7 +46,6 @@ const CreditCard: React.FC<CreditCardProps> = ({ number, name, expiry, cvc, desi
     };
   }, []);
 
-  // Helper function to format card number
   const formatCardNumber = (number: string) => {
     return number.replace(/(\d{4})(?=\d)/g, '$1 ');
   };

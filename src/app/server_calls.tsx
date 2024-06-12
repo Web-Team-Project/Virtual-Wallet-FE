@@ -86,7 +86,7 @@ const fetchCategoriesServer = async () => {
         console.log("User not found")
         return
     }
-    const data = await createGetFetch("http://localhost:8000/api/v1/categories", user);
+    const data = await createGetFetch("https://virtual-wallet-87bx.onrender.com/api/v1/categories", user);
     return data;
 }
 
@@ -96,7 +96,7 @@ const deleteCategoryServer = async (name: string) => {
         console.log("User not found")
         return
     }
-    const response = await fetch(`http://localhost:8000/api/v1/categories?category_name=${encodeURIComponent(name)}`, {
+    const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/categories?category_name=${encodeURIComponent(name)}`, {
         method: "DELETE",
         headers: {
             "Content-Type": "application/json",
@@ -118,7 +118,7 @@ const createCategoryServer = async (name: string) => {
         console.log("User not found")
         return
     }
-    createPostFetch("http://localhost:8000/api/v1/categories", user, { name });
+    createPostFetch("https://virtual-wallet-87bx.onrender.com/api/v1/categories", user, { name });
     
 };
 
@@ -128,7 +128,7 @@ const fetchTransactionsServer = async () => {
         console.log("User not found")
         return
     }
-    const data = await createGetFetch("http://localhost:8000/api/v1/transactions", user);
+    const data = await createGetFetch("https://virtual-wallet-87bx.onrender.com/api/v1/transactions", user);
     return data;
 }
 
@@ -140,7 +140,7 @@ const handleViewProfile = async () => {
     }
     else {
         const verified = await jwtVerify(user.value, new TextEncoder().encode("yoursecretkey"));
-        const response = await fetch(`http://localhost:8000/api/v1/users/${verified.payload.email}`, {
+        const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/users/${verified.payload.email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -158,7 +158,7 @@ const handleAddPhone = async (phone: any) => {
         console.log("User not found")
         return
     } else {
-        const response = await fetch("http://localhost:8000/api/v1/users/phone", {
+        const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/users/phone", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -178,7 +178,7 @@ const handleVerifyPhone = async (code: any) => {
         console.log("User not found")
         return
     } else {
-        const response = await fetch("http://localhost:8000/api/v1/verify_phone", {
+        const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/verify_phone", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -198,7 +198,7 @@ const createTransactionServer = async (transaction: { amount: number; category: 
         console.log("User not found")
         return
     }
-    createPostFetch("http://localhost:8000/api/v1/transactions", user, {
+    createPostFetch("https://virtual-wallet-87bx.onrender.com/api/v1/transactions", user, {
         amount: transaction.amount,
         currency: transaction.currency,
         card_number: transaction.card_number,
@@ -213,7 +213,7 @@ const updateUserRoleServer = async (userId: string, newRole: string) => {
         console.log("User not found");
         return;
     }
-    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/role`, user, { role: newRole });
+    const data = await createPutFetch(`https://virtual-wallet-87bx.onrender.com/api/v1/users/${userId}/role`, user, { role: newRole });
     return data;
 };
 
@@ -223,7 +223,7 @@ const deactivateUserServer = async (userId: string) => {
         console.log("User not found");
         return;
     }
-    const data = await createDeleteFetch(`http://localhost:8000/api/v1/users/${userId}/deactivate`, user);
+    const data = await createDeleteFetch(`https://virtual-wallet-87bx.onrender.com/api/v1/users/${userId}/deactivate`, user);
     return data;
 };
 
@@ -233,7 +233,7 @@ const blockUserServer = async (userId: string) => {
         console.log("User not found");
         return;
     }
-    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/block`, user, {});
+    const data = await createPutFetch(`https://virtual-wallet-87bx.onrender.com/api/v1/users/${userId}/block`, user, {});
     return data;
 };
 
@@ -243,7 +243,7 @@ const unblockUserServer = async (userId: string) => {
         console.log("User not found");
         return;
     }
-    const data = await createPutFetch(`http://localhost:8000/api/v1/users/${userId}/unblock`, user, {});
+    const data = await createPutFetch(`https://virtual-wallet-87bx.onrender.com/api/v1/users/${userId}/unblock`, user, {});
     return data;
 };
 
@@ -253,7 +253,7 @@ const fetchUsersServer = async (search: string, skip: number, limit: number) => 
         throw new Error("User not found. Please log in.");
     }
 
-    const url = `http://localhost:8000/api/v1/search/users?search=${encodeURIComponent(search)}&skip=${skip}&limit=${limit}`;
+    const url = `https://virtual-wallet-87bx.onrender.com/api/v1/search/users?search=${encodeURIComponent(search)}&skip=${skip}&limit=${limit}`;
     const data = await createGetFetch(url, userCookie);
     return data;
 };
@@ -265,7 +265,7 @@ const fetchCardsServer = async () => {
         console.log("User not found")
         return
     }
-    const data = await createGetFetch("http://localhost:8000/api/v1/cards", user);
+    const data = await createGetFetch("https://virtual-wallet-87bx.onrender.com/api/v1/cards", user);
     return data;
 }
 
