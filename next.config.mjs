@@ -7,7 +7,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://localhost:8000/api/:path*', // Ensure this matches your FastAPI URL
+        destination: 'https://virtual-wallet-87bx.onrender.com/api/:path*',
       },
     ];
   },
