@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import CreditCard from '@/app/components/credit_card';
-import { BackgroundGradient } from '@/app/components/ui/background-gradient';
+import React, { useEffect, useState } from "react";
+import CreditCard from "@/app/components/credit_card";
+import { BackgroundGradient } from "@/app/components/ui/background-gradient";
 import { FaArrowLeft } from "react-icons/fa";
-import styles from './card_page.module.css';
+import styles from "./card_page.module.css";
 
 const CardsPage: React.FC = () => {
   const [cards, setCards] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [newCard, setNewCard] = useState({ number: '', card_holder: '', exp_date: '', cvv: '', design: 'credit' });
+  const [newCard, setNewCard] = useState({ number: "", card_holder: "", exp_date: "", cvv: "", design: "credit" });
   const [editCard, setEditCard] = useState<any | null>(null);
   const [showButtons, setShowButtons] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState<boolean>(false);
@@ -16,22 +16,22 @@ const CardsPage: React.FC = () => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/v1/cards', {
-          method: 'GET',
+        const response = await fetch("http://localhost:8000/api/v1/cards", {
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          credentials: 'include',
+          credentials: "include",
         });
         const data = await response.json();
         if (Array.isArray(data)) {
           setCards(data);
         } else {
-          setError('Unexpected response format');
+          setError("Unexpected response format");
         }
         setLoading(false);
       } catch (error) {
-        setError('Failed to fetch cards');
+        setError("Failed to fetch cards");
         setLoading(false);
       }
     };
@@ -41,35 +41,35 @@ const CardsPage: React.FC = () => {
 
   const handleCreateCard = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/cards', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/api/v1/cards", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(newCard),
       });
       const data = await response.json();
       if (data && data.id) {
         setCards([...cards, data]);
-        setNewCard({ number: '', card_holder: '', exp_date: '', cvv: '', design: 'credit' });
+        setNewCard({ number: "", card_holder: "", exp_date: "", cvv: "", design: "credit" });
         setShowCreateForm(false);
       } else {
-        setError('Failed to create card');
+        setError("Failed to create card");
       }
     } catch (error) {
-      setError('Error creating card');
+      setError("Error creating card");
     }
   };
 
   const handleUpdateCard = async (cardId: string) => {
     try {
       const response = await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify(editCard),
       });
       const data = await response.json();
@@ -77,25 +77,25 @@ const CardsPage: React.FC = () => {
         setCards(cards.map(card => (card.id === cardId ? data : card)));
         setEditCard(null);
       } else {
-        setError('Failed to update card');
+        setError("Failed to update card");
       }
     } catch (error) {
-      setError('Error updating card');
+      setError("Error updating card");
     }
   };
 
   const handleDeleteCard = async (cardId: string) => {
     try {
       await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
       });
       setCards(cards.filter(card => card.id !== cardId));
     } catch (error) {
-      setError('Error deleting card');
+      setError("Error deleting card");
     }
   };
 
@@ -150,7 +150,7 @@ const CardsPage: React.FC = () => {
                         className="bg-black text-white px-4 py-2 rounded-full relative overflow-hidden"
                       >
                         <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,255,0,0.6)_25%,rgba(255,255,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-                        <span className="relative z-10">Edit</span>
+                        <span className="relative z-10">Update Card</span>
                       </button>
                     </div>
                     <div className="relative group">
@@ -159,7 +159,7 @@ const CardsPage: React.FC = () => {
                         className="bg-black text-white px-4 py-2 rounded-full relative overflow-hidden"
                       >
                         <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,0,0,0.6)_25%,rgba(255,0,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-                        <span className="relative z-10">Delete</span>
+                        <span className="relative z-10">Delete Card</span>
                       </button>
                     </div>
                   </div>
@@ -173,8 +173,7 @@ const CardsPage: React.FC = () => {
             onClick={() => setShowCreateForm(!showCreateForm)}
             className="rounded-full px-4 py-2 text-white bg-black border-2 border-white text-xs font-bold dark:bg-zinc-800 mb-6 relative overflow-hidden"
           >
-            <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(0,255,0,0.6)_25%,rgba(0,255,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-            <span className="relative z-10">{showCreateForm ? 'Hide Form' : 'Create New Card'}</span>
+            <span className="relative z-10">{showCreateForm ? "Hide Form" : "Create New Card"}</span>
           </button>
         </div>
         {showCreateForm && (

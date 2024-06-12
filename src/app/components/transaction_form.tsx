@@ -144,12 +144,12 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
           className="mb-2 p-2 border rounded-none text-black"
           required
         >
-          <option value="BTC">BTC</option>
-          <option value="ETH">ETH</option>
           <option value="BGN">BGN</option>
           <option value="EUR">EUR</option>
-          <option value="GBP">GBP</option>
           <option value="USD">USD</option>
+          <option value="GBP">GBP</option>
+          <option value="BTC">BTC</option>
+          <option value="ETH">ETH</option>
         </select>
         <button type="submit" className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
           Create
