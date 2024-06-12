@@ -40,7 +40,7 @@ function Navbar({ className }: { className?: string }) {
         <MenuItem setActive={setActive} active={active} item="About">
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/about">About Us</HoveredLink>
-            <HoveredLink href="/features">Features</HoveredLink>
+            <HoveredLink href="/technologies">Technologies</HoveredLink>
             <HoveredLink href="/tabs">Tabs</HoveredLink>
             <HoveredLink href="https://virtual-wallet-87bx.onrender.com/swagger">API</HoveredLink>
           </div>

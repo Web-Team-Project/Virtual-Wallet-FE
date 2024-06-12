@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "../../utils/cn";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const CheckIcon = ({ className }: { className?: string }) => {
   return (
@@ -49,16 +49,17 @@ const LoaderCore = ({
   return (
     <div className="flex relative justify-start max-w-xl mx-auto flex-col mt-40">
       {loadingStates.map((loadingState, index) => {
-        const distance = Math.abs(index - value);
-        const opacity = Math.max(1 - distance * 0.2, 0);
+        const isCurrent = index === value;
+        const opacity = isCurrent ? 1 : 0.2;
+        const overlayClass = isCurrent ? '' : 'bg-black bg-opacity-50';
 
         return (
           <motion.div
             key={index}
-            className={cn("text-left flex gap-2 mb-4")}
-            initial={{ opacity: 0, y: -(value * 40) }}
-            animate={{ opacity: opacity, y: -(value * 40) }}
-            transition={{ duration: 10 }}
+            className={cn("text-left flex gap-2 mb-4", overlayClass)}
+            initial={{ opacity: 0, y: -Math.abs(index - value) * 40 }}
+            animate={{ opacity, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
             <div>
               {index > value && (
@@ -68,8 +69,7 @@ const LoaderCore = ({
                 <CheckFilled
                   className={cn(
                     "text-black dark:text-white",
-                    value === index &&
-                      "text-black dark:text-lime-500 opacity-100"
+                    isCurrent && "text-black dark:text-lime-500 opacity-100"
                   )}
                 />
               )}
@@ -77,7 +77,7 @@ const LoaderCore = ({
             <span
               className={cn(
                 "text-black dark:text-white",
-                value === index && "text-black dark:text-lime-500 opacity-100"
+                isCurrent && "text-black dark:text-lime-500 opacity-100"
               )}
             >
               {loadingState.text}
@@ -92,33 +92,24 @@ const LoaderCore = ({
 export const MultiStepLoader = ({
   loadingStates,
   loading,
-  duration = 2000,
   loop = true,
 }: {
   loadingStates: LoadingState[];
   loading?: boolean;
-  duration?: number;
   loop?: boolean;
 }) => {
   const [currentState, setCurrentState] = useState(0);
 
-  useEffect(() => {
-    if (!loading) {
-      setCurrentState(0);
-      return;
-    }
-    const timeout = setTimeout(() => {
-      setCurrentState((prevState) =>
-        loop
-          ? prevState === loadingStates.length - 1
-            ? 0
-            : prevState + 1
-          : Math.min(prevState + 1, loadingStates.length - 1)
-      );
-    }, duration);
+  const handleNext = () => {
+    setCurrentState((prevState) =>
+      loop
+        ? prevState === loadingStates.length - 1
+          ? 0
+          : prevState + 1
+        : Math.min(prevState + 1, loadingStates.length - 1)
+    );
+  };
 
-    return () => clearTimeout(timeout);
-  }, [currentState, loading, loop, loadingStates.length, duration]);
   return (
     <AnimatePresence mode="wait">
       {loading && (
@@ -133,8 +124,9 @@ export const MultiStepLoader = ({
             opacity: 0,
           }}
           className="w-full h-full fixed inset-0 z-[100] flex items-center justify-center backdrop-blur-2xl"
+          onClick={handleNext}
         >
-          <div className="h-96  relative">
+          <div className="h-96 relative">
             <LoaderCore value={currentState} loadingStates={loadingStates} />
           </div>
 
