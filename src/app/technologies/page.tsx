@@ -5,28 +5,34 @@ import { IconSquareRoundedX } from "@tabler/icons-react";
 
 const loadingStates = [
   {
-    text: "Buying a condo",
+    text: "FastAPI and application structure",
   },
   {
-    text: "Travelling in a flight",
+    text: "Asynchronous programming",
   },
   {
-    text: "Meeting Tyler Durden",
+    text: "Pytest and coverage",
   },
   {
-    text: "He makes soap",
+    text: "PostgreSQL database",
   },
   {
-    text: "We goto a bar",
+    text: "SQLAlchemy ORM and Pydantic models",
   },
   {
-    text: "Start a fight",
+    text: "Google OAuth2 and JWT",
   },
   {
-    text: "We like it",
+    text: "SMTP and Twilio verifications",
   },
   {
-    text: "Welcome to F**** C***",
+    text: "Cron jobs with APScheduler",
+  },
+  {
+    text: "Next.js and frontend development",
+  },
+  {
+    text: "CI pipeline and Docker",
   },
 ];
 
@@ -34,7 +40,7 @@ export default function MultiStepLoaderDemo() {
   const [loading, setLoading] = useState(false);
   return (
     <div className="w-full h-[60vh] flex items-center justify-center">
-      <Loader loadingStates={loadingStates} loading={loading} duration={2000} />
+      <Loader loadingStates={loadingStates} loading={loading} />
 
       <button
         onClick={() => setLoading(true)}
@@ -44,7 +50,7 @@ export default function MultiStepLoaderDemo() {
             "0px -1px 0px 0px #ffffff40 inset, 0px 1px 0px 0px #ffffff40 inset",
         }}
       >
-        Click to load
+        Start
       </button>
 
       {loading && (
