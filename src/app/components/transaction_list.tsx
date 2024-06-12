@@ -1,5 +1,4 @@
-import React from 'react';
-import { BackgroundGradient } from '../components/ui/background-gradient';
+import React from "react";
 
 interface Transaction {
     id: string;
@@ -26,7 +25,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
-            <div className="w-full rounded-3xl max-w-6xl mx-auto p-4 bg-gray-800 rounded shadow-md">
+            <div className="w-full max-w-6xl mx-auto p-4 bg-gray-800 rounded shadow-md">
                 <div className="mb-6">
                     <h2 className="text-xl font-bold mb-2 text-white">Transactions</h2>
                 </div>
@@ -41,8 +40,8 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                     <th className="text-center border px-2 py-1">Currency</th>
                                     <th className="text-center border px-2 py-1">Category Name</th>
                                     <th className="text-center border px-2 py-1">Card Number</th>
-                                    <th className="text-center border px-2 py-1">Recipient Email</th>
-                                    <th className="text-center border px-2 py-1">Status</th>
+                                    <th className="text-center border px-2 py-1 max-w-[150px] truncate">Recipient Email</th>
+                                    <th className="text-center border px-2 py-1 max-w-[100px] truncate">Status</th>
                                     <th className="text-center border px-8 py-1">Created At</th>
                                     <th className="text-center border px-2 py-1">Actions</th>
                                 </tr>
@@ -57,13 +56,13 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                         <td className="text-center border px-2 py-1">{transaction.currency}</td>
                                         <td className="text-center border px-2 py-1">{transaction.category_name}</td>
                                         <td className="text-center border px-2 py-1">{transaction.card_number}</td>
-                                        <td className="text-center border px-2 py-1">{transaction.recipient_email}</td>
-                                        <td className="text-center border px-2 py-1">{transaction.status}</td>
-                                        <td className="border px-4 py-4">{transaction.timestamp.toString().slice(0, 10)}</td>
+                                        <td className="text-center border px-2 py-1 max-w-[150px] truncate">{transaction.recipient_email}</td>
+                                        <td className="text-center border px-2 py-1 max-w-[100px] truncate">{transaction.status}</td>
+                                        <td className="text-center border px-4 py-4">{transaction.timestamp.toString().slice(0, 10)}</td>
                                         <td className="text-center border px-2 py-1">
                                             <div className="flex items-center space-x-2">
                                                 <button
-                                                    onClick={() => onAction(transaction.id, 'approve')}
+                                                    onClick={() => onAction(transaction.id, "approve")}
                                                     className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[80px] h-[30px]"
                                                 >
                                                     <span className="absolute inset-0 overflow-hidden rounded-full">
@@ -74,7 +73,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                                     </div>
                                                 </button>
                                                 <button
-                                                    onClick={() => onAction(transaction.id, 'reject')}
+                                                    onClick={() => onAction(transaction.id, "reject")}
                                                     className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[80px] h-[30px]"
                                                 >
                                                     <span className="absolute inset-0 overflow-hidden rounded-full">
@@ -85,7 +84,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                                     </div>
                                                 </button>
                                                 <button
-                                                    onClick={() => onAction(transaction.id, 'confirm')}
+                                                    onClick={() => onAction(transaction.id, "confirm")}
                                                     className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[80px] h-[30px]"
                                                 >
                                                     <span className="absolute inset-0 overflow-hidden rounded-full">
@@ -97,7 +96,7 @@ const TransactionList: React.FC<TransactionListProps> = ({ transactions, onActio
                                                 </button>
                                                 {isAdmin && (
                                                     <button
-                                                        onClick={() => onAction(transaction.id, 'deny')}
+                                                        onClick={() => onAction(transaction.id, "deny")}
                                                         className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[80px] h-[30px]"
                                                     >
                                                         <span className="absolute inset-0 overflow-hidden rounded-full">

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { fetchCardsServer, fetchCategoriesServer } from '../server_calls';
-import { BackgroundGradient } from '../components/ui/background-gradient';
+import React, { useEffect, useState } from "react";
+import { fetchCardsServer, fetchCategoriesServer } from "../server_calls";
+import { BackgroundGradient } from "../components/ui/background-gradient";
 
 interface TransactionFormProps {
   onCreate: (transaction: { amount: number; category: string; card_number: string; recipient_email: string; currency: string }) => void;
@@ -25,7 +25,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
   const [category, setCategory] = useState<string>("");
   const [cardNum, setCardNum] = useState<string>("");
   const [recipient, setRecipient] = useState<string>("");
-  const [currency, setCurrency] = useState<string>('BGN');
+  const [currency, setCurrency] = useState<string>("BGN");
   const [categories, setCategories] = useState<Category[]>([]);
   const [cards, setCards] = useState<Card[]>([]);
 
@@ -36,7 +36,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
     setCategory("");
     setCardNum("");
     setRecipient("");
-    setCurrency('BGN');
+    setCurrency("BGN");
   };
 
   const handleFetchCards = async () => {
@@ -134,7 +134,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
           type="text"
           value={recipient}
           onChange={(e) => setRecipient(e.target.value)}
-          placeholder="Recipient e-mail"
+          placeholder="Recipient email"
           className="w-full border mb-2 p-2 border rounded-none text-black"
           required
         />

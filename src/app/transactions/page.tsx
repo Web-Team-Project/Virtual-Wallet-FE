@@ -74,7 +74,7 @@ export default function DashboardPage() {
     };
 
     const handleGoBack = () => {
-        window.history.back(); // Fallback mechanism to handle navigation if useRouter is not available
+        window.history.back();
     };
 
     return (
