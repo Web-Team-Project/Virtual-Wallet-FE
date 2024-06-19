@@ -6,7 +6,7 @@ export const useSignOut = () => {
 
   const signOut = useCallback(async () => {
     try {
-      await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/logout", {
+      await fetch("http://localhost:8000/api/v1/logout", {
         method: "GET",
         credentials: "include",
       });

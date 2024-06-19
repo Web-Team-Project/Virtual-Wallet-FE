@@ -1,3 +1,4 @@
+import React from "react";
 import {FaCreditCard, FaListAlt, FaTags, FaWallet} from "react-icons/fa";
 
 export const projects = [

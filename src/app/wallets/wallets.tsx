@@ -11,7 +11,7 @@ const handleCreateWallet = async (currency: string) => {
     }
     else {
         try{
-            const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/wallets", {
+            const response = await fetch("http://localhost:8000/api/v1/wallets", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const handleCreateWallet = async (currency: string) => {
     }
     else {
         try{
-            const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/wallets/balance", {
+            const response = await fetch("http://localhost:8000/api/v1/wallets/balance", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

@@ -2,15 +2,16 @@
 import Image from "next/image";
 import { Tabs } from "../components/ui/tabs";
 import React from "react";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function TabsPage() {
   const tabs = [
     {
-      title: "Home page",
+      title: "Home",
       value: "product",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-          <p>Home page</p>
+          <p>Home</p>
           <Image
             src="https://i.postimg.cc/k48729D6/image.png"
             alt="Home page"
@@ -51,11 +52,11 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "Verify Account",
+      title: "Verification",
       value: "content",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-          <p>Verify Account</p>
+          <p>Verification</p>
           <Image
             src="https://i.postimg.cc/pXVtHKQn/image4.png"
             alt="Content Image"
@@ -66,11 +67,11 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "Main page",
+      title: "Main",
       value: "main",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
-          <p>Main page</p>
+          <p>Main</p>
           <Image
             src="https://i.postimg.cc/3xVMm6sg/image5.png"
             alt="Main Image"
@@ -81,7 +82,7 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "View Profile",
+      title: "Profile",
       value: "profile",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
@@ -111,7 +112,7 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "Wallet",
+      title: "Wallets",
       value: "wallet",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
@@ -126,7 +127,7 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "Card",
+      title: "Cards",
       value: "card",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
@@ -141,7 +142,7 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "Category",
+      title: "Categories",
       value: "categories",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
@@ -156,7 +157,7 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "Transaction",
+      title: "Transactions",
       value: "transactions",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
@@ -171,7 +172,7 @@ export default function TabsPage() {
       ),
     },
     {
-      title: "Admin panel",
+      title: "Admin",
       value: "admin",
       content: (
         <div className="w-full overflow-hidden relative h-full rounded-2xl p-10 text-xl md:text-4xl font-bold text-white bg-gradient-to-br from-purple-700 to-violet-900">
@@ -187,10 +188,23 @@ export default function TabsPage() {
     },
   ];
 
+  const handleGoBack = () => {
+    window.location.href = "/home";
+  }
+  
   return (
-    <div className="h-[20rem] md:h-[45rem] [perspective:1000px] relative flex flex-col max-w-5xl mx-auto w-full items-start justify-start my-40">
-      <Tabs tabs={tabs} />
-    </div>
+    <>
+      <div className="h-[20rem] md:h-[45rem] [perspective:1000px] relative flex flex-col max-w-5xl mx-auto w-full items-start justify-start my-40">
+        <Tabs tabs={tabs} />
+      </div>
+      <button
+        onClick={handleGoBack}
+        className="absolute top-4 left-4 flex items-center space-x-2 rounded-full px-3 py-1 text-white bg-black border border-white text-xs font-bold dark:bg-zinc-800 hover:bg-white hover:text-black transition-colors duration-300"
+      >
+        <FaArrowLeft className="text-white group-hover:text-black transition-colors duration-300" />
+        <span>Go Back to Home Page</span>
+      </button>
+    </>
   );
 }
 

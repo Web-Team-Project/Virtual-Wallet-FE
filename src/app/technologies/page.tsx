@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { MultiStepLoader as Loader } from "../components/ui/multi-step-loader";
 import { IconSquareRoundedX } from "@tabler/icons-react";
+import { FaArrowLeft } from "react-icons/fa";
 
 const loadingStates = [
   {
@@ -36,6 +37,10 @@ const loadingStates = [
   },
 ];
 
+const handleGoBack = () => {
+  window.location.href = "/tabs";
+};
+
 export default function MultiStepLoaderDemo() {
   const [loading, setLoading] = useState(false);
   return (
@@ -51,6 +56,13 @@ export default function MultiStepLoaderDemo() {
         }}
       >
         Start
+      </button>
+      <button
+        onClick={handleGoBack}
+        className="absolute top-4 left-4 flex items-center space-x-2 rounded-full px-3 py-1 text-white bg-black border border-white text-xs font-bold dark:bg-zinc-800 hover:bg-white hover:text-black transition-colors duration-300"
+      >
+        <FaArrowLeft className="text-white group-hover:text-black transition-colors duration-300" />
+        <span>Go to Tabs</span>
       </button>
 
       {loading && (
