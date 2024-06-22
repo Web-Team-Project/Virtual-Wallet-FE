@@ -18,7 +18,7 @@ export default function SignupForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8000/api/v1/users", {
+      const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export default function SignupForm() {
   };
 
   const handleGoogleSignup = () => {
-    window.location.href = "http://localhost:8000/api/v1/login";
+    window.location.href = "https://virtual-wallet-87bx.onrender.com/api/v1/login";
   };
 
   return (

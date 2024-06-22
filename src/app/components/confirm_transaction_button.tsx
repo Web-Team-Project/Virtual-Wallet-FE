@@ -11,7 +11,7 @@ const ConfirmTransactionButton = ({ transactionId, sessionToken }: { transaction
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionToken}` // Use the passed token
+                    'Authorization': `Bearer ${sessionToken}`
                 }
             });
             if (!response.ok) {
