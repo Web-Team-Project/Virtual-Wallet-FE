@@ -69,7 +69,7 @@ export default function ProfilePage() {
     if (session) {
       try {
         const query = search ? `?search=${encodeURIComponent(search)}` : "";
-        const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/contacts${query}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/contacts${query}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export default function ProfilePage() {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/users/search?query=${encodeURIComponent(search)}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/users/search?query=${encodeURIComponent(search)}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -126,7 +126,7 @@ export default function ProfilePage() {
     const session = getSession();
     if (session) {
       try {
-        const userResponse = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/users/${encodeURIComponent(newContactEmail)}`, {
+        const userResponse = await fetch(`http://localhost:8000/api/v1/users/${encodeURIComponent(newContactEmail)}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -141,7 +141,7 @@ export default function ProfilePage() {
         const userData = await userResponse.json();
         const userContactId = userData.id;
 
-        const contactResponse = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/contacts", {
+        const contactResponse = await fetch("http://localhost:8000/api/v1/contacts", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -179,7 +179,7 @@ export default function ProfilePage() {
     }
     if (session) {
       try {
-        const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/contacts/${contactId}`, {
+        const response = await fetch(`http://localhost:8000/api/v1/contacts/${contactId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

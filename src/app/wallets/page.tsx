@@ -63,7 +63,7 @@ const WalletsPage = () => {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/wallets/withdraw", {
+        const response = await fetch("http://localhost:8000/api/v1/wallets/withdraw", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

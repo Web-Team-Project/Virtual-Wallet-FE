@@ -7,7 +7,7 @@ const ConfirmTransactionButton = ({ transactionId, sessionToken }: { transaction
                 throw new Error("User not authenticated.");
             }
 
-            const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/transactions/${transactionId}/confirm`, {
+            const response = await fetch(`http://localhost:8000/api/v1/transactions/${transactionId}/confirm`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

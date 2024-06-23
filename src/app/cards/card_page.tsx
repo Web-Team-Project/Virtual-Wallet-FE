@@ -16,7 +16,7 @@ const CardsPage: React.FC = () => {
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/cards", {
+        const response = await fetch("http://localhost:8000/api/v1/cards", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const CardsPage: React.FC = () => {
 
   const handleCreateCard = async () => {
     try {
-      const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/cards", {
+      const response = await fetch("http://localhost:8000/api/v1/cards", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ const CardsPage: React.FC = () => {
 
   const handleUpdateCard = async (cardId: string) => {
     try {
-      const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/cards/${cardId}`, {
+      const response = await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ const CardsPage: React.FC = () => {
 
   const handleDeleteCard = async (cardId: string) => {
     try {
-      await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/cards/${cardId}`, {
+      await fetch(`http://localhost:8000/api/v1/cards/${cardId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

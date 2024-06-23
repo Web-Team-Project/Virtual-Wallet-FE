@@ -17,7 +17,7 @@ export default function SigninForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://virtual-wallet-87bx.onrender.com/api/v1/token", {
+      const response = await fetch("http://localhost:8000/api/v1/token", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export default function SigninForm() {
   };
 
   const handleGoogleSign = async () => {
-    window.location.href = "https://virtual-wallet-87bx.onrender.com/api/v1/login";
+    window.location.href = "http://localhost:8000/api/v1/login";
   };
 
   useEffect(() => {
@@ -56,11 +56,11 @@ export default function SigninForm() {
           grant_type: "authorization_code",
         };
 
-        const tokenResponse = await axios.post("https://virtual-wallet-87bx.onrender.com/api/v1/auth/callback", tokenData);
+        const tokenResponse = await axios.post("http://localhost:8000/api/v1/auth/callback", tokenData);
         const accessToken = tokenResponse.data.access_token;
 
         const headers = { Authorization: `Bearer ${accessToken}` };
-        const userinfoResponse = await axios.get("https://virtual-wallet-87bx.onrender.com/api/v1/protected", { headers });
+        const userinfoResponse = await axios.get("http://localhost:8000/api/v1/protected", { headers });
 
         router.push("/home");
       };
