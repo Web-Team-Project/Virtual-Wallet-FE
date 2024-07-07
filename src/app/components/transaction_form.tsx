@@ -3,7 +3,13 @@ import { fetchCardsServer, fetchCategoriesServer } from "../server_calls";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 
 interface TransactionFormProps {
-  onCreate: (transaction: { amount: number; category: string; card_number: string; recipient_email: string; currency: string }) => void;
+  onCreate: (transaction: {
+    amount: number;
+    category: string;
+    card_number: string;
+    recipient_email: string;
+    currency: string;
+  }) => void;
 }
 
 interface Category {
@@ -31,7 +37,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onCreate({ amount, category, card_number: cardNum, recipient_email: recipient, currency });
+    onCreate({
+      amount,
+      category,
+      card_number: cardNum,
+      recipient_email: recipient,
+      currency,
+    });
     setAmount(0);
     setCategory("");
     setCardNum("");
@@ -46,24 +58,29 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
 
       if (Array.isArray(data)) {
         console.log("Valid cards data format:", data);
-        setCards(data.map((card: any) => ({
-          exp_date: card.exp_date,
-          design: card.design,
-          number: card.number,
-          id: card.id,
-          card_holder: card.card_holder,
-          cvv: card.cvv,
-          user_id: card.user_id,
-        })));
-        console.log("Cards state after setting:", data.map((card: any) => ({
-          exp_date: card.exp_date,
-          design: card.design,
-          number: card.number,
-          id: card.id,
-          card_holder: card.card_holder,
-          cvv: card.cvv,
-          user_id: card.user_id,
-        })));
+        setCards(
+          data.map((card: any) => ({
+            exp_date: card.exp_date,
+            design: card.design,
+            number: card.number,
+            id: card.id,
+            card_holder: card.card_holder,
+            cvv: card.cvv,
+            user_id: card.user_id,
+          }))
+        );
+        console.log(
+          "Cards state after setting:",
+          data.map((card: any) => ({
+            exp_date: card.exp_date,
+            design: card.design,
+            number: card.number,
+            id: card.id,
+            card_holder: card.card_holder,
+            cvv: card.cvv,
+            user_id: card.user_id,
+          }))
+        );
       } else {
         console.error("Invalid cards data format", data);
       }
@@ -94,8 +111,13 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
 
   return (
     <BackgroundGradient>
-      <form onSubmit={handleSubmit} className="flex flex-col rounded-3xl items-center p-4 bg-gray-800 shadow-md">
-        <h2 className="text-xl font-bold text-white mb-4">Create New Transaction</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col rounded-3xl items-center p-4 bg-gray-800 shadow-md"
+      >
+        <h2 className="text-xl font-bold text-white mb-4">
+          Create New Transaction
+        </h2>
         <input
           type="number"
           value={amount}
@@ -151,7 +173,10 @@ const TransactionForm: React.FC<TransactionFormProps> = ({ onCreate }) => {
           <option value="BTC">BTC</option>
           <option value="ETH">ETH</option>
         </select>
-        <button type="submit" className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
+        <button
+          type="submit"
+          className="rounded-full px-4 py-2 text-white bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+        >
           Create
         </button>
       </form>
