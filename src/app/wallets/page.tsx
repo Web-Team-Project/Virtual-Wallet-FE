@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import { handleCreateWallet, fetchWallets } from "./wallets";
@@ -39,7 +38,7 @@ const WalletsPage = () => {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch(`https://virtual-wallet-87bx.onrender.com/api/v1/wallets/${session.user_id}/add`, {
+        const response = await fetch(`http://localhost:8000/api/v1/wallets/${session.user_id}/add`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
