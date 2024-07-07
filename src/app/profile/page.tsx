@@ -2,7 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import Image from "next/image";
-import { handleAddPhone, handleVerifyPhone, handleViewProfile } from "../server_calls";
+import {
+  handleAddPhone,
+  handleVerifyPhone,
+  handleViewProfile,
+} from "../server_calls";
+import { FaArrowLeft } from "react-icons/fa";
 
 const avatarOutline = {
   boxShadow: "0 0 0 3px white",
@@ -35,7 +40,7 @@ export default function ProfilePage() {
   const [searchResults, setSearchResults] = useState([]);
   const [newContactName, setNewContactName] = useState("");
   const [newContactEmail, setNewContactEmail] = useState("");
-  
+
   function getSession() {
     const session = localStorage.getItem("session");
     if (session) {
@@ -63,20 +68,22 @@ export default function ProfilePage() {
     fetchData();
   }, []);
 
-
   const fetchContacts = async (search: string = "") => {
     const session = getSession();
     if (session) {
       try {
         const query = search ? `?search=${encodeURIComponent(search)}` : "";
-        const response = await fetch(`http://localhost:8000/api/v1/contacts${query}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:8000/api/v1/contacts${query}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.id}`,
+            },
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           console.log("Fetched contacts:", data);
@@ -100,14 +107,19 @@ export default function ProfilePage() {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/users/search?query=${encodeURIComponent(search)}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:8000/api/v1/users/search?query=${encodeURIComponent(
+            search
+          )}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.id}`,
+            },
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setSearchResults(data);
@@ -126,13 +138,18 @@ export default function ProfilePage() {
     const session = getSession();
     if (session) {
       try {
-        const userResponse = await fetch(`http://localhost:8000/api/v1/users/${encodeURIComponent(newContactEmail)}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-        });
+        const userResponse = await fetch(
+          `http://localhost:8000/api/v1/users/${encodeURIComponent(
+            newContactEmail
+          )}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.id}`,
+            },
+          }
+        );
 
         if (!userResponse.ok) {
           throw new Error(`HTTP error! Status: ${userResponse.status}`);
@@ -141,19 +158,22 @@ export default function ProfilePage() {
         const userData = await userResponse.json();
         const userContactId = userData.id;
 
-        const contactResponse = await fetch("http://localhost:8000/api/v1/contacts", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            user_contact_id: userContactId,
-            name: newContactName,
-            email: newContactEmail,
-          }),
-        });
+        const contactResponse = await fetch(
+          "http://localhost:8000/api/v1/contacts",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.id}`,
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              user_contact_id: userContactId,
+              name: newContactName,
+              email: newContactEmail,
+            }),
+          }
+        );
 
         if (!contactResponse.ok) {
           throw new Error(`HTTP error! Status: ${contactResponse.status}`);
@@ -164,7 +184,6 @@ export default function ProfilePage() {
         setNewContactName("");
         setNewContactEmail("");
         fetchContacts();
-
       } catch (error) {
         console.error("Failed to create contact:", error);
       }
@@ -179,14 +198,17 @@ export default function ProfilePage() {
     }
     if (session) {
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/contacts/${contactId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-        });
+        const response = await fetch(
+          `http://localhost:8000/api/v1/contacts/${contactId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.id}`,
+            },
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           fetchContacts();
         } else {
@@ -211,7 +233,7 @@ export default function ProfilePage() {
     setNewPhone(e.target.value);
   };
 
-  const addPhone = async (event: { preventDefault: () => void; }) => {
+  const addPhone = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     try {
       const result = await handleAddPhone(newPhone);
@@ -220,8 +242,7 @@ export default function ProfilePage() {
     }
   };
 
-
-   const handleVerifyClick = async (event: { preventDefault: () => void }) => {
+  const handleVerifyClick = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     try {
       const result = await handleVerifyPhone(verificationCode);
@@ -239,8 +260,19 @@ export default function ProfilePage() {
     }
   };
 
+  const handleGoBack = () => {
+    window.history.back();
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black">
+      <button
+        onClick={handleGoBack}
+        className="absolute top-4 left-4 flex items-center space-x-2 rounded-full px-3 py-1 text-white bg-black border border-white text-xs font-bold dark:bg-zinc-800 hover:bg-white hover:text-black transition-colors duration-300"
+      >
+        <FaArrowLeft className="text-white group-hover:text-black transition-colors duration-300" />
+        <span>Go Back to Home Page</span>
+      </button>
       <BackgroundGradient className="flex flex-col items-center justify-center rounded-[22px] max-w-lg p-4 sm:p-10 bg-white dark:bg-zinc-900">
         <div className="flex items-center justify-center w-48 h-48">
           <Image
@@ -263,7 +295,10 @@ export default function ProfilePage() {
             {!profile.phone_verified && (
               <>
                 {isVerifyingPhone ? (
-                  <form onSubmit={handleVerifyClick} className="mt-4 flex flex-col items-center">
+                  <form
+                    onSubmit={handleVerifyClick}
+                    className="mt-4 flex flex-col items-center"
+                  >
                     <input
                       type="text"
                       value={verificationCode}
@@ -277,9 +312,7 @@ export default function ProfilePage() {
                     >
                       Verify
                     </button>
-                    {error && (
-                      <p className="text-red-500 mt-2">{error}</p>
-                    )}
+                    {error && <p className="text-red-500 mt-2">{error}</p>}
                   </form>
                 ) : (
                   <button
@@ -295,7 +328,10 @@ export default function ProfilePage() {
         ) : (
           <>
             {isAddingPhone ? (
-              <form onSubmit={addPhone} className="mt-4 flex flex-col items-center">
+              <form
+                onSubmit={addPhone}
+                className="mt-4 flex flex-col items-center"
+              >
                 <input
                   type="text"
                   value={newPhone}
@@ -309,9 +345,7 @@ export default function ProfilePage() {
                 >
                   Submit
                 </button>
-                {error && (
-                  <p className="text-red-500 mt-2">{error}</p>
-                )}
+                {error && <p className="text-red-500 mt-2">{error}</p>}
               </form>
             ) : (
               <button
@@ -347,29 +381,51 @@ export default function ProfilePage() {
               className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
             />
             <div className="w-full max-w-md mt-4">
-              {(filteredContacts.length > 0 ? filteredContacts : contacts).map((contact: { contact_id: string, contact_name: string, contact_email: string, contact_phone_number: string }, index: number) => (
-                <div key={index} className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700">
-                  <span className="text-lg font-bold text-black dark:text-white">{contact.contact_name}</span>
-                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_email}</span>
-                  <span className="text-sm text-neutral-600 dark:text-neutral-400">{contact.contact_phone_number}</span>
-                  {contact.contact_id && (
-                    <button
-                      className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[200px] h-[35px]"
-                      onClick={() => deleteContact(contact.contact_id)}
-                    >
-                      <span className="absolute inset-0 overflow-hidden rounded-full">
-                        <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,0,0,0.6)_25%,rgba(255,0,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-                      </span>
-                      <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
-                        <span>Delete Contact</span>
-                      </div>
-                    </button>
-                  )}
-                </div>
-              ))}
+              {(filteredContacts.length > 0 ? filteredContacts : contacts).map(
+                (
+                  contact: {
+                    contact_id: string;
+                    contact_name: string;
+                    contact_email: string;
+                    contact_phone_number: string;
+                  },
+                  index: number
+                ) => (
+                  <div
+                    key={index}
+                    className="flex flex-col p-4 border-b border-gray-200 dark:border-gray-700"
+                  >
+                    <span className="text-lg font-bold text-black dark:text-white">
+                      {contact.contact_name}
+                    </span>
+                    <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                      {contact.contact_email}
+                    </span>
+                    <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                      {contact.contact_phone_number}
+                    </span>
+                    {contact.contact_id && (
+                      <button
+                        className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[200px] h-[35px]"
+                        onClick={() => deleteContact(contact.contact_id)}
+                      >
+                        <span className="absolute inset-0 overflow-hidden rounded-full">
+                          <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,0,0,0.6)_25%,rgba(255,0,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
+                        </span>
+                        <div className="relative flex space-x-2 items-center z-10 rounded-full bg-zinc-950 py-0.5 px-4 ring-1 ring-white/10 ">
+                          <span>Delete Contact</span>
+                        </div>
+                      </button>
+                    )}
+                  </div>
+                )
+              )}
             </div>
             <div className="mt-4 w-full max-w-md">
-              <form onSubmit={createContact} className="flex flex-col items-center">
+              <form
+                onSubmit={createContact}
+                className="flex flex-col items-center"
+              >
                 <input
                   type="email"
                   placeholder="Contact email"
