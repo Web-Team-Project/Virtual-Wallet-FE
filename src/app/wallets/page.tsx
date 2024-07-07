@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { BackgroundGradient } from "../components/ui/background-gradient";
-import { handleCreateWallet, fetchWallets } from "./wallets";
+import { handleCreateWallet, fetchWallets } from "./wallet_calls";
 import React from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
