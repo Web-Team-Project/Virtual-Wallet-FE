@@ -1,6 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { createCategoryServer, deleteCategoryServer, fetchCategoriesServer } from "../server_calls";
+import {
+  createCategoryServer,
+  deleteCategoryServer,
+  fetchCategoriesServer,
+} from "../server_calls";
 import { BackgroundGradient } from "../components/ui/background-gradient";
 import { FaArrowLeft } from "react-icons/fa";
 
@@ -18,7 +22,7 @@ const CategoryPage = () => {
 
   const createCategory = async (name: string) => {
     await createCategoryServer(name);
-    setRefreshCounter(prev => prev + 1);
+    setRefreshCounter((prev) => prev + 1);
   };
 
   const handleCreateCategory = (event: React.FormEvent<HTMLFormElement>) => {
@@ -28,7 +32,7 @@ const CategoryPage = () => {
 
   const handleDeleteCategory = async (name: string) => {
     await deleteCategoryServer(name);
-    setRefreshCounter(prev => prev + 1);
+    setRefreshCounter((prev) => prev + 1);
   };
 
   const fetchCategories = async () => {
@@ -59,18 +63,25 @@ const CategoryPage = () => {
             Manage Your Categories
           </h1>
         </div>
-        <p className="text-lg text-gray-300 mb-12 text-center">Create, view, and delete categories to organize your content better.</p>
+        <p className="text-lg text-gray-300 mb-12 text-center">
+          Create, view, and delete categories to organize your content better.
+        </p>
         <div className="flex flex-row flex-wrap justify-center gap-4">
           {isLoading ? (
             <p>Loading...</p>
           ) : (
             categories.map((category, index) => (
-              <BackgroundGradient key={index} className="flex flex-col items-center justify-center rounded-[22px] w-full sm:max-w-xs p-4 sm:p-10 bg-white dark:bg-zinc-900">
+              <BackgroundGradient
+                key={index}
+                className="flex flex-col items-center justify-center rounded-[22px] w-full sm:max-w-xs p-4 sm:p-10 bg-white dark:bg-zinc-900"
+              >
                 <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200 text-center">
                   {category.name}
                 </p>
-                <button onClick={() => handleDeleteCategory(category.name)}
-                  className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full mt-4">
+                <button
+                  onClick={() => handleDeleteCategory(category.name)}
+                  className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full mt-4"
+                >
                   Delete
                 </button>
               </BackgroundGradient>
@@ -83,10 +94,15 @@ const CategoryPage = () => {
             className="rounded-full px-4 py-2 text-white bg-black border border-white text-xs font-bold dark:bg-zinc-800 relative overflow-hidden"
           >
             <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,255,255,0.6)_25%,rgba(255,255,255,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-            <span className="relative z-10">{showCreateForm ? 'Hide Form' : 'Create Category'}</span>
+            <span className="relative z-10">
+              {showCreateForm ? "Hide Form" : "Create Category"}
+            </span>
           </button>
           {showCreateForm && (
-            <form onSubmit={handleCreateCategory} className="flex flex-col items-center mt-4">
+            <form
+              onSubmit={handleCreateCategory}
+              className="flex flex-col items-center mt-4"
+            >
               <input
                 type="text"
                 value={newCategoryName}
@@ -95,8 +111,10 @@ const CategoryPage = () => {
                 required
                 className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
               />
-              <button type="submit"
-                className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 border border-white relative overflow-hidden">
+              <button
+                type="submit"
+                className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 border border-white relative overflow-hidden"
+              >
                 Create Category
                 <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(255,255,255,0.6)_25%,rgba(255,255,255,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
               </button>

@@ -24,13 +24,18 @@ export default function SignupForm() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ given_name, family_name, email, hashed_password }),
+        body: JSON.stringify({
+          given_name,
+          family_name,
+          email,
+          hashed_password,
+        }),
       });
 
       if (!response.ok) {
         throw new Error("An error occurred while signing up.");
       }
-  
+
       const data = await response.json();
       console.log(data.message);
 
@@ -54,10 +59,10 @@ export default function SignupForm() {
         <form className="my-8" onSubmit={handleSubmit}>
           <LabelInputContainer className="mb-4">
             <Label htmlFor="givenName">First Name</Label>
-            <Input 
-              id="givenName" 
+            <Input
+              id="givenName"
               placeholder="Enter your first name"
-              type="text" 
+              type="text"
               value={given_name}
               onChange={(e) => setGivenName(e.target.value)}
             />
@@ -65,10 +70,10 @@ export default function SignupForm() {
 
           <LabelInputContainer className="mb-4">
             <Label htmlFor="familyName">Family Name</Label>
-            <Input 
-              id="familyName" 
-              placeholder="Enter your family name" 
-              type="text" 
+            <Input
+              id="familyName"
+              placeholder="Enter your family name"
+              type="text"
               value={family_name}
               onChange={(e) => setFamilyName(e.target.value)}
             />
@@ -76,10 +81,10 @@ export default function SignupForm() {
 
           <LabelInputContainer className="mb-4">
             <Label htmlFor="email">Email Address</Label>
-            <Input 
-              id="email" 
+            <Input
+              id="email"
               placeholder="user@example.com"
-              type="email" 
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -87,10 +92,10 @@ export default function SignupForm() {
 
           <LabelInputContainer className="mb-4">
             <Label htmlFor="password">Password</Label>
-            <Input 
-              id="password" 
-              placeholder="••••••••" 
-              type="password" 
+            <Input
+              id="password"
+              placeholder="••••••••"
+              type="password"
               value={hashed_password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -123,7 +128,9 @@ export default function SignupForm() {
           <p className="text-neutral-600 dark:text-neutral-300">
             Already have an account?{" "}
             <Link href="/login" passHref>
-              <span className="text-neutral-700 dark:text-cyan-500 font-medium cursor-pointer">Sign in</span>
+              <span className="text-neutral-700 dark:text-cyan-500 font-medium cursor-pointer">
+                Sign in
+              </span>
             </Link>
           </p>
         </div>

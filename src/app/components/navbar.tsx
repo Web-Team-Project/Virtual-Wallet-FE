@@ -5,7 +5,6 @@ import { useSignOut } from "./sign-out";
 import { cn } from "../utils/cn";
 import { useRouter } from "next/navigation";
 
-
 export default function NavbarFunc() {
   return (
     <div>
@@ -35,7 +34,9 @@ function Navbar({ className }: { className?: string }) {
   };
 
   return (
-    <div className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}>
+    <div
+      className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}
+    >
       <Menu setActive={setActive}>
         <MenuItem setActive={setActive} active={active} item="About">
           <div className="flex flex-col space-y-4 text-sm">
@@ -48,8 +49,12 @@ function Navbar({ className }: { className?: string }) {
         <MenuItem setActive={setActive} active={active} item={user}>
           <div className="flex flex-col space-y-4 text-sm">
             <HoveredLink href="/dashboard">Dashboard</HoveredLink>
-            <HoveredLink href="#" onClick={viewProfile}>View Profile</HoveredLink>
-            <HoveredLink href="#" onClick={handleSignOut}>Sign out</HoveredLink>
+            <HoveredLink href="#" onClick={viewProfile}>
+              View Profile
+            </HoveredLink>
+            <HoveredLink href="#" onClick={handleSignOut}>
+              Sign out
+            </HoveredLink>
           </div>
         </MenuItem>
         <MenuItem setActive={setActive} active={active} item="Admin Panel">

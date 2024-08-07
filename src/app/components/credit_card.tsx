@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
-import styles from './credit_card.module.css';
+import React, { useRef, useEffect } from "react";
+import styles from "./credit_card.module.css";
 
 interface CreditCardProps {
   number: string;
@@ -11,9 +11,15 @@ interface CreditCardProps {
   design: string;
 }
 
-const CreditCard: React.FC<CreditCardProps> = ({ number, name, expiry, cvc, design }) => {
+const CreditCard: React.FC<CreditCardProps> = ({
+  number,
+  name,
+  expiry,
+  cvc,
+  design,
+}) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const cardStyle = design === 'credit' ? styles.creditCard : styles.debitCard;
+  const cardStyle = design === "credit" ? styles.creditCard : styles.debitCard;
 
   useEffect(() => {
     const card = cardRef.current;
@@ -34,20 +40,20 @@ const CreditCard: React.FC<CreditCardProps> = ({ number, name, expiry, cvc, desi
     };
 
     const handleMouseLeave = () => {
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg)";
     };
 
-    card.addEventListener('mousemove', handleMouseMove);
-    card.addEventListener('mouseleave', handleMouseLeave);
+    card.addEventListener("mousemove", handleMouseMove);
+    card.addEventListener("mouseleave", handleMouseLeave);
 
     return () => {
-      card.removeEventListener('mousemove', handleMouseMove);
-      card.removeEventListener('mouseleave', handleMouseLeave);
+      card.removeEventListener("mousemove", handleMouseMove);
+      card.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, []);
 
   const formatCardNumber = (number: string) => {
-    return number.replace(/(\d{4})(?=\d)/g, '$1 ');
+    return number.replace(/(\d{4})(?=\d)/g, "$1 ");
   };
 
   return (
@@ -58,7 +64,11 @@ const CreditCard: React.FC<CreditCardProps> = ({ number, name, expiry, cvc, desi
         <div className={styles.expiry}>{expiry}</div>
         <div className={styles.name}>{name}</div>
       </div>
-      <img src="/mastercard-logo.png" alt="MasterCard Logo" className={styles.logo} />
+      <img
+        src="/mastercard-logo.png"
+        alt="MasterCard Logo"
+        className={styles.logo}
+      />
     </div>
   );
 };

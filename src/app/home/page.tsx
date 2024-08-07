@@ -27,12 +27,15 @@ export default function Home() {
             made easy
           </div>
           <div className="hidden text-lg font-thin mt-6 text-neutral-800 dark:text-neutral-200 md:block">
-            Manage your finances with confidence. Ensure every payment is secure and every transfer is smooth. By using our app, your transactions are{""}
+            Manage your finances with confidence. Ensure every payment is secure
+            and every transfer is smooth. By using our app, your transactions
+            are{""}
             <FlipWords
               words={words}
               duration={duration}
               className="font-bold text-white"
-            />.
+            />
+            .
           </div>
         </div>
       </div>

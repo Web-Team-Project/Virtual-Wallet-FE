@@ -101,7 +101,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
   const _buildMaterial = () => {
     if (!globeRef.current) return;
 
-    const globeMaterial = globeRef.current.globeMaterial() as unknown as {
+    const globeMaterial = (globeRef.current.globeMaterial() as unknown) as {
       color: Color;
       emissive: Color;
       emissiveIntensity: number;

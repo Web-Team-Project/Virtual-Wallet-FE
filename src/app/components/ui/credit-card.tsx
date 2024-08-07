@@ -32,7 +32,9 @@ export const CreditCard = () => {
               height={30}
             />
             <div className="flex flex-col w-full h-full justify-end gap-4">
-              <p className="text-2xl tracking-widest text-white">4402 5532 2021 2887</p>
+              <p className="text-2xl tracking-widest text-white">
+                4402 5532 2021 2887
+              </p>
               <div className="flex justify-between">
                 <p className="text-lg uppercase text-white">John Doe</p>
                 <p className="text-lg uppercase text-white">03/29</p>

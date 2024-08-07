@@ -56,11 +56,17 @@ export default function SigninForm() {
           grant_type: "authorization_code",
         };
 
-        const tokenResponse = await axios.post("http://localhost:8000/api/v1/auth/callback", tokenData);
+        const tokenResponse = await axios.post(
+          "http://localhost:8000/api/v1/auth/callback",
+          tokenData
+        );
         const accessToken = tokenResponse.data.access_token;
 
         const headers = { Authorization: `Bearer ${accessToken}` };
-        const userinfoResponse = await axios.get("http://localhost:8000/api/v1/protected", { headers });
+        const userinfoResponse = await axios.get(
+          "http://localhost:8000/api/v1/protected",
+          { headers }
+        );
 
         router.push("/home");
       };

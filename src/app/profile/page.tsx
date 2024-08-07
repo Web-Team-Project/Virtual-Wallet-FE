@@ -262,7 +262,7 @@ export default function ProfilePage() {
 
   const handleGoBack = () => {
     window.history.back();
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black">

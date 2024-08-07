@@ -51,7 +51,7 @@ const LoaderCore = ({
       {loadingStates.map((loadingState, index) => {
         const isCurrent = index === value;
         const opacity = isCurrent ? 1 : 0.2;
-        const overlayClass = isCurrent ? '' : 'bg-black bg-opacity-50';
+        const overlayClass = isCurrent ? "" : "bg-black bg-opacity-50";
 
         return (
           <motion.div

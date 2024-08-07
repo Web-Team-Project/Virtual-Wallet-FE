@@ -4,9 +4,12 @@ import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { BackgroundBeams } from "./components/ui/background-beams";
 
-const World = dynamic(() => import("./components/ui/globe").then((m) => m.World), {
-  ssr: false,
-});
+const World = dynamic(
+  () => import("./components/ui/globe").then((m) => m.World),
+  {
+    ssr: false,
+  }
+);
 
 export default function terraWallet() {
   const globeConfig = {
@@ -419,7 +422,8 @@ export default function terraWallet() {
             terraWallet
           </h2>
           <p className="text-base md:text-lg font-normal text-neutral-200 max-w-xl mt-2 mx-auto">
-            Experience seamless transactions with our payment system. Join us to make your transactions smoother and more secure.
+            Experience seamless transactions with our payment system. Join us to
+            make your transactions smoother and more secure.
           </p>
         </motion.div>
         <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent to-black z-10" />
@@ -428,7 +432,10 @@ export default function terraWallet() {
         </div>
       </div>
       <div className="mt-4">
-        <button onClick={() => window.location.href = "/login"} className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[200px] h-[38px]">
+        <button
+          onClick={() => (window.location.href = "/login")}
+          className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[200px] h-[38px]"
+        >
           <span className="absolute inset-0 overflow-hidden rounded-full">
             <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
           </span>
@@ -454,7 +461,10 @@ export default function terraWallet() {
         </button>
       </div>
       <div className="mt-4">
-        <button onClick={() => window.location.href = "/register"} className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[200px] h-[38px]">
+        <button
+          onClick={() => (window.location.href = "/register")}
+          className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6 text-white inline-block w-[200px] h-[38px]"
+        >
           <span className="absolute inset-0 overflow-hidden rounded-full">
             <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
           </span>

@@ -2,8 +2,8 @@
 
 import React from "react";
 import { HoverEffect } from "../components/ui/card-hover-effect";
-import {projects} from "./projects";
-import {FaArrowLeft} from "react-icons/fa";
+import { projects } from "./projects";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function Dashboard() {
   const handleGoBack = () => {
@@ -20,13 +20,15 @@ export default function Dashboard() {
         <span>Go Back to Home Page</span>
       </button>
       <div className="w-full max-w-6xl mx-auto p-4">
-        <h1 className="text-4xl font-bold text-white text-center mb-2">Dashboard</h1>
+        <h1 className="text-4xl font-bold text-white text-center mb-2">
+          Dashboard
+        </h1>
         <p className="text-lg text-gray-300 mb-8 text-center">
-          Manage all your financial assets in one place. Easily navigate through wallets, cards, transactions, and categories.
+          Manage all your financial assets in one place. Easily navigate through
+          wallets, cards, transactions, and categories.
         </p>
         <HoverEffect items={projects} />
       </div>
     </div>
   );
 }
-

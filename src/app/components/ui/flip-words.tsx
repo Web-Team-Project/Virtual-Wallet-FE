@@ -17,7 +17,7 @@ export const FlipWords = ({
 
   useEffect(() => {
     startAnimation();
-  
+
     return () => {
       clearInterval(interval);
     };

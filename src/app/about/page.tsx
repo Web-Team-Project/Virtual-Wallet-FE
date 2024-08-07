@@ -26,7 +26,7 @@ const people = [
 
 const handleGoBack = () => {
   window.history.back();
-}
+};
 
 export default function AnimatedTooltipPreview() {
   return (

@@ -38,15 +38,18 @@ const WalletsPage = () => {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch(`http://localhost:8000/api/v1/wallets/${session.user_id}/add`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-          body: JSON.stringify({ amount, currency: wallet.currency }),
-        });
+        const response = await fetch(
+          `http://localhost:8000/api/v1/wallets/${session.user_id}/add`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.id}`,
+            },
+            credentials: "include",
+            body: JSON.stringify({ amount, currency: wallet.currency }),
+          }
+        );
         if (!response.ok) {
           throw new Error(`Failed to add funds: ${response.status}`);
         }
@@ -62,15 +65,18 @@ const WalletsPage = () => {
     const session = getSession();
     if (session) {
       try {
-        const response = await fetch("http://localhost:8000/api/v1/wallets/withdraw", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${session.id}`,
-          },
-          credentials: "include",
-          body: JSON.stringify({ amount, currency: wallet.currency }),
-        });
+        const response = await fetch(
+          "http://localhost:8000/api/v1/wallets/withdraw",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${session.id}`,
+            },
+            credentials: "include",
+            body: JSON.stringify({ amount, currency: wallet.currency }),
+          }
+        );
         if (!response.ok) {
           throw new Error(`Failed to withdraw funds: ${response.status}`);
         }
@@ -90,9 +96,11 @@ const WalletsPage = () => {
   const fetchingWallets = async () => {
     try {
       const dataArray = await fetchWallets();
-      const walletsData = dataArray.map(([balance, currency]: [number, string]) => ({ balance, currency }));
+      const walletsData = dataArray.map(
+        ([balance, currency]: [number, string]) => ({ balance, currency })
+      );
       setWallets(walletsData);
-      console.log('Updated wallets state:', walletsData);
+      console.log("Updated wallets state:", walletsData);
     } catch (error) {
       console.error("An error occurred while fetching wallets:", error);
       setError("Failed to fetch wallets.");
@@ -120,11 +128,17 @@ const WalletsPage = () => {
             Welcome to Your Wallet Management
           </h1>
         </div>
-        <p className="text-lg text-gray-300 mb-12 text-center">Here you can manage all your wallets. Create, add funds, and withdraw funds from your wallets easily.</p>
+        <p className="text-lg text-gray-300 mb-12 text-center">
+          Here you can manage all your wallets. Create, add funds, and withdraw
+          funds from your wallets easily.
+        </p>
         <div className="flex flex-row flex-wrap justify-center gap-4">
           {wallets && wallets.length > 0 ? (
             wallets.map((wallet, index) => (
-              <BackgroundGradient key={index} className="flex flex-col items-center justify-center rounded-[22px] w-full sm:max-w-xs p-4 sm:p-10 bg-white dark:bg-zinc-900">
+              <BackgroundGradient
+                key={index}
+                className="flex flex-col items-center justify-center rounded-[22px] w-full sm:max-w-xs p-4 sm:p-10 bg-white dark:bg-zinc-900"
+              >
                 <p className="text-base sm:text-xl text-black mt-4 mb-2 dark:text-neutral-200 text-center">
                   Wallet Currency: {wallet.currency}
                 </p>
@@ -139,8 +153,10 @@ const WalletsPage = () => {
                       onChange={(e) => setAddAmount(Number(e.target.value))}
                       className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2"
                     />
-                    <button onClick={() => handleAddFunds(wallet, addAmount)}
-                      className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full">
+                    <button
+                      onClick={() => handleAddFunds(wallet, addAmount)}
+                      className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full"
+                    >
                       Add
                     </button>
                   </div>
@@ -149,11 +165,17 @@ const WalletsPage = () => {
                     <input
                       type="number"
                       placeholder="Amount to Withdraw"
-                      onChange={(e) => setWithdrawAmount(Number(e.target.value))}
+                      onChange={(e) =>
+                        setWithdrawAmount(Number(e.target.value))
+                      }
                       className="rounded px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 mb-2"
                     />
-                    <button onClick={() => handleWithdrawFunds(wallet, withdrawAmount)}
-                      className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full">
+                    <button
+                      onClick={() =>
+                        handleWithdrawFunds(wallet, withdrawAmount)
+                      }
+                      className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 w-full"
+                    >
                       Withdraw
                     </button>
                   </div>
@@ -170,13 +192,24 @@ const WalletsPage = () => {
             className="rounded-full px-4 py-2 text-white bg-black border border-white text-xs font-bold dark:bg-zinc-800 relative overflow-hidden"
           >
             <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(0,255,0,0.6)_25%,rgba(0,255,0,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
-            <span className="relative z-10">{showCreateForm ? 'Hide Form' : 'Create Wallet'}</span>
+            <span className="relative z-10">
+              {showCreateForm ? "Hide Form" : "Create Wallet"}
+            </span>
           </button>
           {showCreateForm && (
-            <form onSubmit={(e) => { e.preventDefault(); createWallet(newWalletCurrency); }}
-              className="flex flex-col items-center mt-4">
-              <select value={newWalletCurrency} onChange={(e) => setNewWalletCurrency(e.target.value)} required
-                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                createWallet(newWalletCurrency);
+              }}
+              className="flex flex-col items-center mt-4"
+            >
+              <select
+                value={newWalletCurrency}
+                onChange={(e) => setNewWalletCurrency(e.target.value)}
+                required
+                className="rounded-full px-4 py-2 text-black dark:text-white bg-gray-200 dark:bg-gray-700 my-2"
+              >
                 <option value="">Select Currency</option>
                 <option value="BGN">BGN</option>
                 <option value="EUR">EUR</option>
@@ -185,8 +218,10 @@ const WalletsPage = () => {
                 <option value="BTC">BTC</option>
                 <option value="ETH">ETH</option>
               </select>
-              <button type="submit"
-                className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 border border-white">
+              <button
+                type="submit"
+                className="rounded-full px-4 py-2 text-white bg-black text-xs font-bold dark:bg-zinc-800 border border-white"
+              >
                 Create Wallet
               </button>
             </form>
@@ -195,6 +230,6 @@ const WalletsPage = () => {
       </div>
     </div>
   );
-}
+};
 
 export default WalletsPage;
